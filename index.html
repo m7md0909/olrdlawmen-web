@@ -27,15 +27,16 @@ p{margin:0}
 
 /* header */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--navy);border-bottom:1px solid var(--brass-d)}
-.top-in{max-width:1120px;margin:0 auto;padding:8px var(--gx2) 0 var(--gx);display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-mark);color:var(--brass);letter-spacing:.12em;font-size:1.15rem;padding-bottom:8px}
+.top-in{max-width:1120px;margin:0 auto;padding:8px var(--gx2) 0 var(--gx);display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap}
+.brand{order:1;flex:none;display:flex;align-items:center;gap:10px;font-family:var(--f-mark);color:var(--brass);letter-spacing:.12em;font-size:1.15rem;padding-bottom:8px}
 .brand img{width:36px;height:36px}
-.nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;order:2;flex:1 1 0;min-width:0}
 .nav::-webkit-scrollbar{display:none}
-.nav a{flex:none;padding:12px 14px;font-family:var(--f-head);font-weight:700;color:var(--mute);border-bottom:3px solid transparent;white-space:nowrap}
+.nav a{flex:none;padding:12px 9px;font-family:var(--f-head);font-weight:700;color:var(--mute);border-bottom:3px solid transparent;white-space:nowrap}
 .nav a:hover{color:var(--paper)}
 .nav a[aria-current=page]{color:var(--brass-l);border-bottom-color:var(--brass)}
-.mode{padding-bottom:8px}
+.mode{order:3;flex:none;display:flex;align-items:center;gap:8px;padding-bottom:8px}.mode bdi{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:760px){.nav{order:3;flex:1 0 100%}.mode{order:2;margin-inline-start:auto}}
 .demo{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;background:var(--seal);color:#f3efe3;font-size:.9rem;padding:4px var(--gx2) 4px var(--gx)}
 .demo button{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:2px;padding:0 10px;cursor:pointer;font-size:.85rem}
 
@@ -427,7 +428,7 @@ window.OUTLAW_ADAPTER=async function(){
     async signIn(email,password){const {error}=await sb.auth.signInWithPassword({email,password});if(error)throw error},
     async signUp(email,password,name){const {data,error}=await sb.auth.signUp({email,password,options:{data:{name}}});if(error)throw error;return{needsConfirm:!data.session}},
     async oauth(provider){const {error}=await sb.auth.signInWithOAuth({provider,options:{redirectTo:location.origin+location.pathname}});if(error)throw error},
-    async signOut(){await sb.auth.signOut()},
+    async signOut(){await sb.auth.signOut({scope:'local'})},
     async listProfiles(){const {data,error}=await sb.from('profiles').select('*').order('created_at');if(error)throw error;return data},
     async setRole(id,role){const {error}=await sb.from('profiles').update({role}).eq('id',id);if(error)throw error}
   };
@@ -670,7 +671,7 @@ document.addEventListener('click',async ev=>{
   if(t.dataset.rs){ui.rStatus=t.dataset.rs;render();return}
   if(t.dataset.bt){ui.bType=t.dataset.bt;render();return}
   if(t.dataset.act==='login'){loginDialog();return}
-  if(t.dataset.act==='logout'){await caps.auth.signOut();return}
+  if(t.dataset.act==='logout'){try{await caps.auth.signOut()}catch(_){}caps.refresh&&caps.refresh(null);toast('تم تسجيل الخروج');return}
   if(t.dataset.act==='hidedemo'){await ensureSeeded();try{await caps.db.doc('config/site').set({example:false});toast('تم إخفاء الشريط')}catch(_){toast('تعذر الحفظ')}}
 });
 document.addEventListener('input',ev=>{
@@ -699,8 +700,8 @@ render();
       const ad=await window.OUTLAW_ADAPTER();
       if(!ad)return;
       caps.db=ad.db;caps.auth=ad.auth;
-      const setP=p=>{caps.profile=p;caps.level=p?(LEVEL[p.role]||0):0;caps.write=caps.level>=1;caps.assets=caps.level>=1?ad.assets:null;if(caps.level>=3)loadProfiles();render()};
-      ad.auth.onChange(setP);listen();
+      const setP=p=>{if(!p&&ui.route==='accounts')ui.route='home';caps.profile=p;caps.level=p?(LEVEL[p.role]||0):0;caps.write=caps.level>=1;caps.assets=caps.level>=1?ad.assets:null;if(caps.level>=3)loadProfiles();render()};
+      caps.refresh=setP;ad.auth.onChange(setP);listen();
       setP(await ad.auth.current());
     }catch(_){}
     return;

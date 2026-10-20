@@ -1019,7 +1019,7 @@ promo(){
   <section class="sheet"><div class="sh"><h2>متطلبات الترقية</h2><span>PROMOTION</span></div><p class="lead">لا تتم الترقية إلا بعد استيفاء كل المتطلبات، وأي مخالفة أعلى من الحد المسموح توقف العد من جديد.</p><div class="steps">${asc.slice(0,-1).map((r,i)=>{const n=asc[i+1],p=S.promotionsMap[r.id]||{};return `<div class="step"><div class="h"><span class="rk"><i></i>${e(r.name)}</span><span class="arrow">←</span><span class="rk"><i></i>${e(n.name)}</span></div><dl><dt>ساعات الخدمة</dt><dd>${p.hours!=null?e(p.hours)+' ساعة':'-'}</dd><dt>سجل نظيف</dt><dd>${p.clean!=null?e(p.clean)+' يوماً':'-'}</dd><dt>المخالفات</dt><dd>${e(p.maxDeg||'-')}</dd><dt>الاختبار</dt><dd>${e(p.exam||'-')}</dd><dt>التوصية</dt><dd>${e(p.rec||'-')}</dd><dt>شرط إضافي</dt><dd>${e(p.extra||'-')}</dd></dl><div class="acts">${edBtn('promotions',r.id)}</div></div>`}).join('')}</div></section>`;
 },
 wings(){
-  return ph("Wings","الوينقات الموجودة في المكتب وقوانين كل واحد وشروط الانضمام إليه.")+(canKind('wings')?`<div class="acts" style="margin:0 0 18px">${addBtn('wings','إضافة وينق')}</div>`:'')+`${S.wings.length?'':`<div class="sheet"><div class="empty">ما تمت إضافة أي وينق بعد.${canKind('wings')?' اضغط «إضافة وينق» لإضافة الأول.':''}</div></div>`}<div class="wg">${S.wings.map(w=>`<article class="sheet wing"><div class="h"><h2>${e(w.ar)}</h2><span class="en">${e(w.en)}</span></div><p class="lead" style="margin:8px 0">${e(w.desc)}</p><div class="meta"><span><b>المسؤول:</b> <bdi class="ltr">${e(w.head)}</bdi></span><span><b>أقل رتبة:</b> ${e(rank(w.minRank).name)}</span><span><b>الأعضاء:</b> ${e(w.members)}</span><span class="tag ${w.open?'ok':'dim'}">${w.open?'التقديم مفتوح':'التقديم مغلق'}</span></div><h4>القوانين</h4><ol>${(w.rules||[]).map(x=>`<li>${e(x)}</li>`).join('')}</ol><h4>شروط الانضمام</h4>${lines(w.join)}<div class="acts">${edBtn('wings',w.id)}</div></article>`).join('')}</div>`;
+  return ph("Wings","الوينقات الموجودة في المكتب وقوانين كل واحد وشروط الانضمام إليه.")+(canKind('wings')?`<div class="acts" style="margin:0 0 18px">${addBtn('wings','إضافة وينق')}</div>`:'')+`${S.wings.length?'':`<div class="sheet"><div class="empty">ما تمت إضافة أي وينق بعد.${canKind('wings')?' اضغط «إضافة وينق» لإضافة الأول.':''}</div></div>`}<div class="wg">${S.wings.map(w=>`<article class="sheet wing"><div class="h"><h2>${e(w.ar)}</h2><span class="en">${e(w.en)}</span></div><p class="lead" style="margin:8px 0">${e(w.desc)}</p><div class="meta"><span><b>المسؤول:</b> <bdi class="ltr">${e(w.head)}</bdi></span><span><b>أقل رتبة:</b> ${e(rank(w.minRank).name)}</span><span><b>الأعضاء:</b> ${w.members!=null?e(w.members):'-'}</span><span class="tag ${w.open?'ok':'dim'}">${w.open?'التقديم مفتوح':'التقديم مغلق'}</span></div><h4>القوانين</h4><ol>${(w.rules||[]).map(x=>`<li>${e(x)}</li>`).join('')}</ol><h4>شروط الانضمام</h4>${lines(w.join)}<div class="acts">${edBtn('wings',w.id)}</div></article>`).join('')}</div>`;
 },
 banned(){
   const q=ui.bQ.trim();
@@ -1043,7 +1043,7 @@ function go(r,opt={}){if(!V[r])r='home';const ch=r!==ui.route;ui.route=r;if('ran
 /* ---------- editor ---------- */
 const STATUS=()=>Object.entries(S.statuses);
 const SCH={
- members:{t:'منفذ',f:[['name','اسم الشخصية','text'],['discord','حساب Discord','text'],['rank','الرتبة','rank'],['post','المنصب','text'],['points','النقاط','num'],['gear','معدات خاصة','sel',()=>[['1','نعم'],['0','لا']]],['status','الحالة','sel',STATUS]]},
+ members:{t:'منفذ',f:[['name','اسم الشخصية','text'],['discord','حساب Discord','text'],['rank','الرتبة','rank'],['post','المنصب','text'],['points','النقاط','num'],['gear','معدات خاصة','sel',()=>[['','بدون قيمة'],['1','نعم'],['0','لا']]],['status','الحالة','sel',STATUS]]},
  ranks:{t:'رتبة',f:[['name','اسم الرتبة','text'],['en','الاسم بالإنجليزي','text'],['stars','عدد النجوم','num'],['desc','الوصف','area'],['can','الصلاحيات','lines'],['cannot','غير مسموح','lines']]},
  degrees:{t:'درجة',f:[['name','اسم الدرجة','text'],['desc','الوصف','area'],['ex','أمثلة','lines']]},
  promotions:{t:'متطلبات الترقية',f:[['hours','ساعات الخدمة','num'],['clean','أيام السجل النظيف','num'],['maxDeg','حد المخالفات','text'],['exam','الاختبار','text'],['rec','التوصية','text'],['extra','شرط إضافي','text']]},
@@ -1090,11 +1090,11 @@ function openEditor(kind,id){
     const v=item[k];const id='f_'+k;let c='';
     if(t==='text')c=`<input id="${id}" type="text" value="${e(v??'')}">`;
     else if(t==='date')c=`<input id="${id}" type="date" value="${e(v??new Date().toISOString().slice(0,10))}">`;
-    else if(t==='num')c=`<input id="${id}" type="number" min="0" value="${e(v??0)}">`;
+    else if(t==='num')c=`<input id="${id}" type="number" min="0" value="${v==null?'':e(v)}"><small>اتركه فاضياً ليظهر بدون قيمة (-)</small>`;
     else if(t==='area')c=`<textarea id="${id}">${e(v??'')}</textarea>`;
     else if(t==='lines')c=`<textarea id="${id}">${e((v||[]).join('\n'))}</textarea><small>كل سطر بند مستقل</small>`;
     else if(t==='rank')c=`<select id="${id}">${ranksDesc().map(r=>`<option value="${r.id}"${+v===r.id?' selected':''}>${e(r.name)}</option>`).join('')}</select>`;
-    else if(t==='sel'){const cur=k==='open'?(v===false?'0':'1'):k==='gear'?(v?'1':'0'):v;c=`<select id="${id}">${o().map(([a,b])=>`<option value="${e(a)}"${String(cur)===String(a)?' selected':''}>${e(b)}</option>`).join('')}</select>`}
+    else if(t==='sel'){const cur=k==='open'?(v===false?'0':'1'):k==='gear'?(v===true?'1':v===false?'0':''):v;c=`<select id="${id}">${o().map(([a,b])=>`<option value="${e(a)}"${String(cur)===String(a)?' selected':''}>${e(b)}</option>`).join('')}</select>`}
     else if(t==='img')c=caps.assets?`<div id="pvbox"></div><input id="${id}" type="file" accept="image/*"><small id="imst">اختر صورة (تُصغَّر تلقائياً قبل الرفع)</small>`:`<small>رفع الصور غير متاح لحسابك</small>`;
     return `<div class="fld"><label for="${id}">${l}</label>${c}</div>`;
   };
@@ -1111,8 +1111,8 @@ function openEditor(kind,id){
     ev.preventDefault();const er=$('#er',ov);er.hidden=true;
     const out={...item};
     for(const [k,,t] of sc.f){const el=$('#f_'+k,ov);if(t==='img'){if(img)out.img=img;else delete out.img;continue}if(!el)continue;let v=el.value;
-      if(t==='num'||t==='rank')v=+v;else if(t==='lines')v=v.split('\n').map(s=>s.trim()).filter(Boolean);else if(t==='text'||t==='area')v=v.trim();
-      if(k==='open'||k==='gear')v=v==='1';
+      if(t==='rank')v=+v;else if(t==='num')v=v.trim()===''?null:+v;else if(t==='lines')v=v.split('\n').map(s=>s.trim()).filter(Boolean);else if(t==='text'||t==='area')v=v.trim();
+      if(k==='open')v=v==='1';else if(k==='gear')v=v===''?null:v==='1';
       out[k]=v}
     const need=kind==='members'?'name':kind==='wings'?'ar':kind==='banned'?'name':kind==='ranks'||kind==='degrees'?'name':null;
     if(need&&!out[need]){er.textContent='الاسم مطلوب';er.hidden=false;return}

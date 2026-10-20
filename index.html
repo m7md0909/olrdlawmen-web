@@ -150,13 +150,13 @@ td bdi.ltr{display:inline-block;text-align:center}
 .dg[data-n="1"]{border-top-color:#7d8a91}.dg[data-n="2"]{border-top-color:var(--brass)}.dg[data-n="3"]{border-top-color:#c9822f}.dg[data-n="4"]{border-top-color:#c0562b}.dg[data-n="5"]{border-top-color:var(--seal-l)}.dg[data-n="6"]{border-top-color:#e0453a}
 .mx td:first-child,.mx th:first-child{position:sticky;inset-inline-start:0;z-index:1}
 .mx td:first-child{background:var(--navy2)}
-.mx td{min-width:130px;background:color-mix(in srgb,var(--seal) calc(var(--s) * 11%),transparent)}
+.mx td{min-width:130px;background:color-mix(in srgb,var(--seal) calc(var(--s) * 14%),transparent)}
 .mx td:first-child{background:var(--navy2)}
 .mx td b{font-weight:700;color:#fff}
 .mx select{width:100%;background:rgba(11,20,28,.75)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 0 0;font-size:.95rem;color:var(--mute)}
 .legend span{display:inline-flex;gap:6px;align-items:center}
-.legend i{width:14px;height:14px;border:1px solid var(--line);background:color-mix(in srgb,var(--seal) calc(var(--s) * 11%),var(--navy))}
+.legend i{width:14px;height:14px;border:1px solid var(--line);background:color-mix(in srgb,var(--seal) calc(var(--s) * 14%),var(--navy))}
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px}
 .step{border:1px solid var(--line);padding:12px 14px;background:rgba(255,255,255,.03);min-width:0}
 .step .h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
@@ -220,6 +220,12 @@ footer{border-top:1px solid var(--brass-d);padding:16px var(--gx2) calc(16px + e
 
 .tw th,.tw td{padding-inline:9px}
 .sheet:has(.tw){padding-inline:16px}
+.st.retired::before{background:#6b7782}
+
+.tw table.mx{table-layout:fixed;width:100%;min-width:900px}
+.mx th:first-child,.mx td:first-child{width:160px}
+.mx td{min-width:0}
+.mx select{width:100%;min-width:0;padding:6px 8px;font-size:.92rem}
 </style></head>
 <body><div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
@@ -252,7 +258,11 @@ window.SITE = {
    "en": "Lance Corporal",
    "stars": 0,
    "desc": "",
-   "can": [],
+   "can": [
+    "يحق له صرف بندقية للحالات المستعصية للجونير بوليس والقارد",
+    "يحق له تطبيق قانون قتال رجل لرجل في حال وجود عداوة منطقية بين شخصين",
+    "يحق له جمع عموم الوحدات لتوضيح الأخطاء الميدانية"
+   ],
    "cannot": []
   },
   {
@@ -261,7 +271,12 @@ window.SITE = {
    "en": "Corporal",
    "stars": 0,
    "desc": "",
-   "can": [],
+   "can": [
+    "استخراج عربة مصفحة (لا يوجد عليها رشاش آلي)",
+    "يحق له إقامة حملات ميدانية مصغرة وجمع الوحدات والتوجه إلى المناطق المشبوهة ومداهمتها",
+    "يحق له جمع عموم الوحدات لتوضيح الأخطاء الميدانية",
+    "يحق له خصم خمس نقاط كحد أقصى (بإذن Sergeant فما فوق)"
+   ],
    "cannot": []
   },
   {
@@ -279,7 +294,12 @@ window.SITE = {
    "en": "Sergeant",
    "stars": 0,
    "desc": "",
-   "can": [],
+   "can": [
+    "تطبيق آلية التنقل بين المدن",
+    "يحق له درج أسماء المجرمين إلى قائمة المطلوبين",
+    "يحق له خصم أو زيادة خمس نقاط كحد أقصى",
+    "يحق له صرف أو استخراج بندقية من نوع القناصة بشكل مؤقت في حال تطلبت الحالة (بإذن Lieutenant فما فوق)"
+   ],
    "cannot": []
   },
   {
@@ -297,7 +317,12 @@ window.SITE = {
    "en": "Lieutenant",
    "stars": 0,
    "desc": "",
-   "can": [],
+   "can": [
+    "وفي حال تواجده يعتبر المسؤول الأول وله السلطة الإشرافية على الميدان وعلى كافة السارجنتس والبوردرز، والتأكد من ضبطهم وسير أمورهم",
+    "يحق له جمع الوحدات ومحاولة صيد المطلوبين",
+    "يحق له استخراج مصفحة من نوع الآلي (بإذن Head of division فما فوق)",
+    "يحق له خصم أو زيادة خمس نقاط بدون اللجوء لأي أحد"
+   ],
    "cannot": []
   },
   {
@@ -306,7 +331,9 @@ window.SITE = {
    "en": "Inspector",
    "stars": 0,
    "desc": "",
-   "can": [],
+   "can": [
+    "جميع الصلاحيات"
+   ],
    "cannot": []
   },
   {
@@ -315,7 +342,9 @@ window.SITE = {
    "en": "Deputy Sheriff",
    "stars": 0,
    "desc": "",
-   "can": [],
+   "can": [
+    "جميع الصلاحيات"
+   ],
    "cannot": []
   },
   {
@@ -324,7 +353,9 @@ window.SITE = {
    "en": "Sheriff",
    "stars": 0,
    "desc": "",
-   "can": [],
+   "can": [
+    "جميع الصلاحيات"
+   ],
    "cannot": []
   },
   {
@@ -333,14 +364,17 @@ window.SITE = {
    "en": "Marshal",
    "stars": 0,
    "desc": "",
-   "can": [],
+   "can": [
+    "جميع الصلاحيات"
+   ],
    "cannot": []
   }
  ],
  "statuses": {
   "active": "في الخدمة",
   "leave": "إجازة",
-  "suspended": "موقوف"
+  "suspended": "موقوف",
+  "retired": "متقاعد"
  },
  "members": [
   {
@@ -351,7 +385,9 @@ window.SITE = {
    "gear": null,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m01",
+   "o": 0
   },
   {
    "name": "Hetrish",
@@ -361,7 +397,9 @@ window.SITE = {
    "gear": null,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m02",
+   "o": 1
   },
   {
    "name": "Shamekh ALashhb",
@@ -371,7 +409,9 @@ window.SITE = {
    "gear": null,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m03",
+   "o": 2
   },
   {
    "name": "Churchill Albert",
@@ -381,7 +421,9 @@ window.SITE = {
    "gear": true,
    "post": "مكتب إدارة العاصمة",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m04",
+   "o": 3
   },
   {
    "name": "Aoun Aljasas",
@@ -391,7 +433,9 @@ window.SITE = {
    "gear": true,
    "post": "مكتب إدارة العاصمة",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m05",
+   "o": 4
   },
   {
    "name": "Rabia Alashath",
@@ -401,7 +445,9 @@ window.SITE = {
    "gear": true,
    "post": "رئيس رجال القانون",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m06",
+   "o": 5
   },
   {
    "name": "haythem alburkan",
@@ -411,7 +457,9 @@ window.SITE = {
    "gear": true,
    "post": "نائب رئيس رجال القانون",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m07",
+   "o": 6
   },
   {
    "name": "Dhari Wael",
@@ -421,7 +469,9 @@ window.SITE = {
    "gear": true,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m08",
+   "o": 7
   },
   {
    "name": "Saad Alqnas",
@@ -431,7 +481,9 @@ window.SITE = {
    "gear": true,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m09",
+   "o": 8
   },
   {
    "name": "abdulaziz hajar",
@@ -441,7 +493,9 @@ window.SITE = {
    "gear": false,
    "post": "مستشار الشيرف",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m10",
+   "o": 9
   },
   {
    "name": "Bale Robotrs",
@@ -451,7 +505,9 @@ window.SITE = {
    "gear": true,
    "post": "رئيس قسم التحقيق",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m11",
+   "o": 10
   },
   {
    "name": "Abdallah al Battal",
@@ -461,7 +517,9 @@ window.SITE = {
    "gear": true,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m12",
+   "o": 11
   },
   {
    "name": "Musab Alarqm",
@@ -471,7 +529,9 @@ window.SITE = {
    "gear": true,
    "post": "نائب رئيس قسم التحقيق",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m13",
+   "o": 12
   },
   {
    "name": "Hasan Aban",
@@ -481,7 +541,9 @@ window.SITE = {
    "gear": true,
    "post": "مستشار الشيرف",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m14",
+   "o": 13
   },
   {
    "name": "Aroua ALasha",
@@ -491,7 +553,9 @@ window.SITE = {
    "gear": true,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m15",
+   "o": 14
   },
   {
    "name": "ALI ALHOOT",
@@ -501,7 +565,9 @@ window.SITE = {
    "gear": true,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m16",
+   "o": 15
   },
   {
    "name": "Daham Kinanah",
@@ -511,7 +577,9 @@ window.SITE = {
    "gear": true,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m17",
+   "o": 16
   },
   {
    "name": "Ali Alqallaf",
@@ -521,7 +589,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m18",
+   "o": 17
   },
   {
    "name": "ALKSAR ABN",
@@ -531,7 +601,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m19",
+   "o": 18
   },
   {
    "name": "JASSAS ALHAIB",
@@ -541,7 +613,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m20",
+   "o": 19
   },
   {
    "name": "Hamza Qasaymeh",
@@ -551,7 +625,9 @@ window.SITE = {
    "gear": true,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m21",
+   "o": 20
   },
   {
    "name": "ALHARITH ALMUGHIRA",
@@ -561,7 +637,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m22",
+   "o": 21
   },
   {
    "name": "Shbeb bn zhel",
@@ -571,7 +649,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m23",
+   "o": 22
   },
   {
    "name": "Ward Tashkandi",
@@ -581,7 +661,9 @@ window.SITE = {
    "gear": true,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m24",
+   "o": 23
   },
   {
    "name": "Khrash AlMakhrosh",
@@ -591,7 +673,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m25",
+   "o": 24
   },
   {
    "name": "Yahya Ibrahim",
@@ -601,7 +685,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m26",
+   "o": 25
   },
   {
    "name": "Abdulmalik AlBattal",
@@ -611,7 +697,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m27",
+   "o": 26
   },
   {
    "name": "AlHarith Abbad",
@@ -621,7 +709,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m28",
+   "o": 27
   },
   {
    "name": "Dirgham Alashath",
@@ -631,7 +721,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m29",
+   "o": 28
   },
   {
    "name": "Marah Tashkandi",
@@ -641,7 +733,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m30",
+   "o": 29
   },
   {
    "name": "Gibrel Gutadh",
@@ -651,7 +745,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m31",
+   "o": 30
   },
   {
    "name": "zaeter bn mrh",
@@ -661,7 +757,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m32",
+   "o": 31
   },
   {
    "name": "Sahoud AlMajed",
@@ -671,7 +769,9 @@ window.SITE = {
    "gear": false,
    "post": "",
    "joined": "",
-   "status": "active"
+   "status": "active",
+   "id": "m33",
+   "o": 32
   }
  ],
  "degrees": [
@@ -743,103 +843,62 @@ window.SITE = {
   }
  ],
  "ladder": [
-  "تنبيه شفهي",
-  "تنبيه كتابي",
-  "إنذار رسمي",
-  "إيقاف 24 ساعة",
-  "إيقاف 3 أيام",
-  "تنزيل رتبة",
-  "تجميد الرتبة والتحقيق",
-  "فصل"
+  "تحذير",
+  "تحذير كسر",
+  "تحذير فصل",
+  "كسر",
+  "فصل",
+  "تقديرية من الشؤون",
+  "تقديرية ترفع للمارشال"
  ],
  "penalties": {
   "1": [
    0,
    1,
+   2,
    3,
    4,
-   5,
-   7
+   5
   ],
   "2": [
    0,
    1,
+   2,
    3,
    4,
-   5,
-   7
+   5
   ],
   "3": [
    0,
    1,
+   2,
    3,
    4,
-   5,
-   7
+   5
   ],
   "4": [
    0,
    1,
+   2,
    3,
    4,
-   5,
-   7
+   5
   ],
   "5": [
    0,
    1,
+   2,
    3,
    4,
-   5,
-   7
+   5
   ],
   "6": [
+   0,
    1,
    2,
-   4,
-   5,
-   6,
-   7
-  ],
-  "7": [
-   1,
-   2,
-   4,
-   5,
-   6,
-   7
-  ],
-  "8": [
-   1,
-   2,
-   4,
-   5,
-   6,
-   7
-  ],
-  "9": [
-   1,
    3,
-   5,
-   6,
-   7,
-   7
-  ],
-  "10": [
-   1,
-   3,
-   5,
-   6,
-   7,
-   7
-  ],
-  "11": [
-   1,
-   3,
-   5,
-   6,
-   7,
-   7
+   4,
+   5
   ]
  },
  "promotions": {},
@@ -999,6 +1058,7 @@ const edBtn=(kind,id,label='تعديل')=>canKind(kind)?`<button class="btn ghos
 const addBtn=(kind,label)=>canKind(kind)?`<button class="btn" data-ed="${kind}" data-id="">+ ${label}</button>`:'';
 const lines=a=>`<ul>${(a||[]).map(x=>`<li>${e(x)}</li>`).join('')}</ul>`;
 
+const hasPerm=r=>(r.can||[]).length||(r.cannot||[]).length||r.desc;
 const mvBtns=(x,rows)=>{
   if(ui.rQ.trim()||ui.rStatus!=='all')return '';
   const g=S.members.filter(m=>m.rank===x.rank).sort(ord),i=g.findIndex(m=>m.id===x.id);
@@ -1036,14 +1096,14 @@ roster(){
   <div class="count">عرض ${rows.length} من ${S.members.length}</div><div class="tw"><table><thead><tr><th>الاسم</th><th>Discord</th><th>الرتبة</th><th>المنصب</th><th>النقاط</th><th>معدات خاصة</th><th>الحالة</th>${canKind('members')?'<th></th>':''}</tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td><bdi class="ltr">${e(x.name)}</bdi></td><td class="num">${e(x.discord||'-')}</td><td><span class="rk"><i></i>${e(rank(x.rank).name)}</span></td><td>${e(x.post||'-')}</td><td class="num">${x.points!=null?e(x.points):'-'}</td><td>${x.gear===true?'نعم':x.gear===false?'لا':'-'}</td><td><span class="st ${e(x.status)}">${e(S.statuses[x.status]||x.status)}</span></td>${canKind('members')?`<td class="mv">${mvBtns(x,rows)}${edBtn('members',x.id)}</td>`:''}</tr>`).join(''):`<tr><td colspan="8" class="empty">ما في نتائج مطابقة</td></tr>`}</tbody></table></div></div>`;
 },
 ranks(){
-  return ph("سلم الصلاحيات","كل رتبة وما تملكه من صلاحيات وما يُحظر عليها، من الأعلى إلى الأدنى.")+`<div class="sheet">${canKind('ranks')?`<div class="acts" style="margin:0 0 6px">${addBtn('ranks','إضافة رتبة عليا')}</div>`:''}${ranksDesc().map(r=>`<article class="rank" id="r${r.id}"><div class="star">${r.id}</div><div><div class="nm"><h3>${e(r.name)}</h3><span class="en">${e(r.en)}</span></div>${r.stars>0?stars(r.stars):''}</div><div class="body">${r.desc?`<p class="lead" style="margin:6px 0 0">${e(r.desc)}</p>`:''}${(r.can||[]).length||(r.cannot||[]).length?`<div class="cols">`:'<div>'}${(r.can||[]).length?`<div><h4>الصلاحيات</h4>${lines(r.can)}</div>`:''}${(r.cannot||[]).length?`<div class="no"><h4>غير مسموح</h4>${lines(r.cannot)}</div>`:''}</div><div class="acts"><button class="lnk" data-go="roster" data-rank="${r.id}">عرض منفذي هذه الرتبة</button>${edBtn('ranks',r.id)}</div></div></article>`).join('')}</div>`;
+  return ph("سلم الصلاحيات","كل رتبة وما تملكه من صلاحيات وما يُحظر عليها، من الأعلى إلى الأدنى.")+`<div class="sheet">${canKind('ranks')?`<div class="acts" style="margin:0 0 6px">${addBtn('ranks','إضافة رتبة عليا')}</div>`:''}${ranksDesc().filter(r=>canKind('ranks')||hasPerm(r)).map(r=>`<article class="rank" id="r${r.id}"${hasPerm(r)?'':' style="opacity:.55"'}><div class="star">${r.id}</div><div><div class="nm"><h3>${e(r.name)}</h3><span class="en">${e(r.en)}</span></div>${r.stars>0?stars(r.stars):''}</div><div class="body">${r.desc?`<p class="lead" style="margin:6px 0 0">${e(r.desc)}</p>`:''}${hasPerm(r)?'':'<p class="lead" style="margin:6px 0 0">لا صلاحيات مكتوبة لهذه الرتبة، وهي مخفية عن الزوار. اضغط «تعديل» لإضافتها.</p>'}${(r.can||[]).length||(r.cannot||[]).length?`<div class="cols">`:'<div>'}${(r.can||[]).length?`<div><h4>الصلاحيات</h4>${lines(r.can)}</div>`:''}${(r.cannot||[]).length?`<div class="no"><h4>غير مسموح</h4>${lines(r.cannot)}</div>`:''}</div><div class="acts"><button class="lnk" data-go="roster" data-rank="${r.id}">عرض منفذي هذه الرتبة</button>${edBtn('ranks',r.id)}</div></div></article>`).join('')}</div>`;
 },
 promo(){
   const asc=ranksAsc();
   return ph("الترقيات والمحاسبة","درجات المخالفات الست، ما يترتب على كل رتبة عند المخالفة، ومتطلبات الترقية.")+
   `<section class="sheet"><div class="sh"><h2>درجات المخالفات</h2><span>6 LEVELS</span></div><p class="lead">كل بند في الكتيب يندرج تحت درجة من ست درجات. الدرجة تحدد نوع المحاسبة بحسب رتبة رجل القانون.</p><div class="deg">${S.degrees.map(d=>`<div class="dg" data-n="${d.n}"><div class="h"><span class="tag">${d.n}</span><h3>${e(d.name)}</h3></div><p>${e(d.desc)}</p>${lines(d.ex)}<div class="acts">${edBtn('degrees',d.id)}</div></div>`).join('')}</div></section>
-  <section class="sheet"><div class="sh"><h2>المحاسبة حسب الرتبة</h2><span>PENALTIES</span></div><p class="lead">اقرأ الصف برتبتك والعمود بدرجة المخالفة. الرتب الأعلى تتحمل مسؤولية أكبر فتتصاعد محاسبتها أسرع.${canKind('penalties')?' غيّر أي خانة من القائمة وتحفظ مباشرة.':''}</p><div class="tw"><table class="mx"><thead><tr><th>الرتبة</th>${S.degrees.map(d=>`<th>الدرجة ${d.n}</th>`).join('')}</tr></thead><tbody>${ranksDesc().map(r=>{const row=S.penalties[r.id]||S.penalties[Math.max(...Object.keys(S.penalties))]||[];return `<tr><td><span class="rk"><i></i>${e(r.name)}</span></td>${S.degrees.map((d,i)=>{const s=row[i]??0;return `<td style="--s:${s}">${canKind('penalties')?`<select data-pen="${r.id}:${i}" aria-label="${e(r.name)} درجة ${d.n}">${S.ladder.map((l,k)=>`<option value="${k}"${k===s?' selected':''}>${e(l)}</option>`).join('')}</select>`:`<b>${e(S.ladder[s])}</b>`}</td>`}).join('')}</tr>`}).join('')}</tbody></table></div><div class="legend"><b>الشدة:</b>${S.ladder.map((l,i)=>`<span><i style="--s:${i}"></i>${e(l)}</span>`).join('')}</div></section>
-  <section class="sheet"><div class="sh"><h2>متطلبات الترقية</h2><span>PROMOTION</span></div><p class="lead">لا تتم الترقية إلا بعد استيفاء كل المتطلبات، وأي مخالفة أعلى من الحد المسموح توقف العد من جديد.</p><div class="steps">${asc.slice(0,-1).map((r,i)=>{const n=asc[i+1],p=S.promotionsMap[r.id]||{};return `<div class="step"><div class="h"><span class="rk"><i></i>${e(r.name)}</span><span class="arrow">←</span><span class="rk"><i></i>${e(n.name)}</span></div><dl><dt>ساعات الخدمة</dt><dd>${p.hours!=null?e(p.hours)+' ساعة':'-'}</dd><dt>سجل نظيف</dt><dd>${p.clean!=null?e(p.clean)+' يوماً':'-'}</dd><dt>المخالفات</dt><dd>${e(p.maxDeg||'-')}</dd><dt>الاختبار</dt><dd>${e(p.exam||'-')}</dd><dt>التوصية</dt><dd>${e(p.rec||'-')}</dd><dt>شرط إضافي</dt><dd>${e(p.extra||'-')}</dd></dl><div class="acts">${edBtn('promotions',r.id)}</div></div>`}).join('')}</div></section>`;
+  <section class="sheet"><div class="sh"><h2>المحاسبة حسب الرتبة</h2><span>PENALTIES</span></div><p class="lead">اقرأ الصف برتبتك والعمود بدرجة المخالفة. المحاسبة تتصاعد من الأضعف إلى الأقوى.${canKind('penalties')?' غيّر أي خانة من القائمة وتحفظ مباشرة.':''}</p><div class="tw"><table class="mx"><thead><tr><th>الرتبة</th>${S.degrees.map(d=>`<th>الدرجة ${d.n}</th>`).join('')}</tr></thead><tbody>${(()=>{const lt=S.ranks.find(r=>r.name==='ملازم');const top=S.ladder[S.ladder.length-1];const rows=ranksDesc().filter(r=>!lt||r.id<lt.id).map(r=>{const row=S.penalties[r.id]||[];return `<tr><td><span class="rk"><i></i>${e(r.name)}</span></td>${S.degrees.map((d,i)=>{const s=row[i]??0;return `<td style="--s:${s}">${canKind('penalties')?`<select data-pen="${r.id}:${i}" aria-label="${e(r.name)} درجة ${d.n}">${S.ladder.slice(0,-1).map((l,k)=>`<option value="${k}"${k===s?' selected':''}>${e(l)}</option>`).join('')}</select>`:`<b>${e(S.ladder[s])}</b>`}</td>`}).join('')}</tr>`}).join('');return (lt?`<tr><td><span class="rk"><i></i>${e(lt.name)} فما فوق</span></td><td colspan="${S.degrees.length}" style="--s:${S.ladder.length-1}"><b>${e(top)}</b></td></tr>`:'')+rows})()}</tbody></table></div><div class="legend"><b>من الأضعف للأقوى:</b>${S.ladder.map((l,i)=>`<span><i style="--s:${i}"></i>${e(l)}</span>`).join('')}</div></section>
+  <section class="sheet"><div class="sh"><h2>متطلبات الترقية</h2><span>PROMOTION</span></div><p class="lead">لا تتم الترقية إلا بعد استيفاء كل المتطلبات، وأي مخالفة أعلى من الحد المسموح توقف العد من جديد.</p><div class="steps">${(()=>{const lt=S.ranks.find(r=>r.name==='ملازم');const lim=lt?lt.id-1:asc.length;const st=asc.filter(r=>r.id<lim).map(r=>{const n=rank(r.id+1),p=S.promotionsMap[r.id]||{};return `<div class="step"><div class="h"><span class="rk"><i></i>${e(r.name)}</span><span class="arrow">←</span><span class="rk"><i></i>${e(n.name)}</span></div><dl><dt>ساعات الخدمة</dt><dd>${p.hours!=null?e(p.hours)+' ساعة':'-'}</dd><dt>سجل نظيف</dt><dd>${p.clean!=null?e(p.clean)+' يوماً':'-'}</dd><dt>المخالفات</dt><dd>${e(p.maxDeg||'-')}</dd><dt>شرط إضافي</dt><dd>${e(p.extra||'-')}</dd></dl><div class="acts">${edBtn('promotions',r.id)}</div></div>`}).join('');return st+(lt?`<div class="step"><div class="h"><span class="rk"><i></i>${e(rank(lim).name)}</span><span class="arrow">←</span><span class="rk"><i></i>${e(lt.name)} وما فوق</span></div><p style="line-height:1.9">الترقية لرتبة ${e(lt.name)} وما فوقها ترجع للرئاسة.</p></div>`:'')})()}</div></section>`;
 },
 wings(){
   return ph("Wings","الوينقات الموجودة في المكتب وقوانين كل واحد وشروط الانضمام إليه.")+(canKind('wings')?`<div class="acts" style="margin:0 0 18px">${addBtn('wings','إضافة وينق')}</div>`:'')+`${S.wings.length?'':`<div class="sheet"><div class="empty">ما تمت إضافة أي وينق بعد.${canKind('wings')?' اضغط «إضافة وينق» لإضافة الأول.':''}</div></div>`}<div class="wg">${S.wings.map(w=>`<article class="sheet wing"><div class="h"><h2>${e(w.ar)}</h2><span class="en">${e(w.en)}</span></div><p class="lead" style="margin:8px 0">${e(w.desc)}</p><div class="meta"><span><b>المسؤول:</b> <bdi class="ltr">${e(w.head)}</bdi></span><span><b>أقل رتبة:</b> ${e(rank(w.minRank).name)}</span><span><b>الأعضاء:</b> ${w.members!=null?e(w.members):'-'}</span><span class="tag ${w.open?'ok':'dim'}">${w.open?'التقديم مفتوح':'التقديم مغلق'}</span></div><h4>القوانين</h4><ol>${(w.rules||[]).map(x=>`<li>${e(x)}</li>`).join('')}</ol><h4>شروط الانضمام</h4>${lines(w.join)}<div class="acts">${edBtn('wings',w.id)}</div></article>`).join('')}</div>`;
@@ -1073,7 +1133,7 @@ const SCH={
  members:{t:'منفذ',f:[['name','اسم الشخصية','text'],['discord','حساب Discord','text'],['rank','الرتبة','rank'],['post','المنصب','text'],['points','النقاط','num'],['gear','معدات خاصة','sel',()=>[['','بدون قيمة'],['1','نعم'],['0','لا']]],['status','الحالة','sel',STATUS]]},
  ranks:{t:'رتبة',f:[['name','اسم الرتبة','text'],['en','الاسم بالإنجليزي','text'],['stars','عدد النجوم','num'],['desc','الوصف','area'],['can','الصلاحيات','lines'],['cannot','غير مسموح','lines']]},
  degrees:{t:'درجة',f:[['name','اسم الدرجة','text'],['desc','الوصف','area'],['ex','أمثلة','lines']]},
- promotions:{t:'متطلبات الترقية',f:[['hours','ساعات الخدمة','num'],['clean','أيام السجل النظيف','num'],['maxDeg','حد المخالفات','text'],['exam','الاختبار','text'],['rec','التوصية','text'],['extra','شرط إضافي','text']]},
+ promotions:{t:'متطلبات الترقية',f:[['hours','ساعات الخدمة','num'],['clean','أيام السجل النظيف','num'],['maxDeg','حد المخالفات','text'],['extra','شرط إضافي','text']]},
  wings:{t:'وينق',f:[['ar','الاسم','text'],['en','الاسم بالإنجليزي','text'],['head','المسؤول','text'],['minRank','أقل رتبة','rank'],['members','عدد الأعضاء','num'],['open','التقديم','sel',()=>[['1','مفتوح'],['0','مغلق']]],['desc','الوصف','area'],['rules','القوانين','lines'],['join','شروط الانضمام','lines']]},
  banned:{t:'ممنوع',f:[['name','الاسم','text'],['type','النوع','sel',()=>Object.entries(S.types)],['scope','النطاق','text'],['desc','الوصف','area'],['withdraw','حالات السحب','lines'],['action','الإجراء','text'],['img','صورة','img']]}
 };
@@ -1096,7 +1156,7 @@ async function meDialog(){
 }
 function loginDialog(){
   const ov=document.createElement('div');ov.className='ov';let mode='in';
-  const draw=()=>{ov.innerHTML=`<form class="sheet dlg" novalidate><h2>${mode==='in'?'تسجيل الدخول':'إنشاء حساب'}</h2>${mode==='up'?'<div class="fld"><label for="a_n">الاسم</label><input id="a_n" type="text" autocomplete="name"></div>':''}<div class="fld"><label for="a_e">البريد الإلكتروني</label><input id="a_e" type="email" dir="ltr" autocomplete="email"></div><div class="fld"><label for="a_p">كلمة المرور</label><input id="a_p" type="password" dir="ltr" autocomplete="${mode==='in'?'current-password':'new-password'}"><small>${mode==='up'?'6 أحرف على الأقل. الحساب الجديد يبدأ كمشاهد، والمدير يرفع صلاحيته.':''}</small></div><div class="err" id="er" hidden></div><div class="foot"><button class="btn" type="submit">${mode==='in'?'دخول':'إنشاء الحساب'}</button><button class="btn ghost" type="button" data-oa="discord">Discord</button><button class="btn ghost" type="button" data-oa="google">Google</button><button class="btn ghost" type="button" id="cn">إلغاء</button><span class="sp"></span><button class="lnk" type="button" id="sw">${mode==='in'?'ليس لدي حساب':'لدي حساب'}</button></div></form>`;
+  const draw=()=>{ov.innerHTML=`<form class="sheet dlg" novalidate><h2>${mode==='in'?'تسجيل الدخول':'إنشاء حساب'}</h2>${mode==='up'?'<div class="fld"><label for="a_n">الاسم</label><input id="a_n" type="text" autocomplete="name"></div>':''}<div class="fld"><label for="a_e">البريد الإلكتروني</label><input id="a_e" type="email" dir="ltr" autocomplete="email"></div><div class="fld"><label for="a_p">كلمة المرور</label><input id="a_p" type="password" dir="ltr" autocomplete="${mode==='in'?'current-password':'new-password'}"><small>${mode==='up'?'6 أحرف على الأقل. الحساب الجديد يبدأ كمشاهد، والمدير يرفع صلاحيته.':''}</small></div><div class="err" id="er" hidden></div><div class="foot"><button class="btn" type="submit">${mode==='in'?'دخول':'إنشاء الحساب'}</button><button class="btn ghost" type="button" data-oa="discord">Discord</button><button class="btn ghost" type="button" data-oa="google">Google</button><button class="btn ghost" type="button" id="cn">إلغاء</button><span class="sp"></span><button class="lnk" type="button" id="sw">${mode==='in'?'ما عندي حساب':'عندي حساب'}</button></div></form>`;
     ov.querySelectorAll('[data-oa]').forEach(x=>x.onclick=async()=>{try{await caps.auth.oauth(x.dataset.oa)}catch(err){const er=$('#er',ov);er.textContent='تعذر الدخول، تأكد من تفعيل هذه الطريقة في الإعدادات';er.hidden=false}});$('#cn',ov).onclick=()=>ov.remove();$('#sw',ov).onclick=()=>{mode=mode==='in'?'up':'in';draw()};
     $('form',ov).onsubmit=async ev=>{ev.preventDefault();const er=$('#er',ov);er.hidden=true;
       try{const em=$('#a_e',ov).value.trim(),pw=$('#a_p',ov).value;
@@ -1109,8 +1169,8 @@ function loginDialog(){
 function openEditor(kind,id){
   const sc=SCH[kind],isNew=!id;
   let item=isNew?{}:clone(listOf(kind).find(x=>String(x.id)===String(id))||{});
-  if(!isNew&&!item.id)return;
   if(kind==='promotions'&&!item.id)item={id:String(id)};
+  if(!isNew&&!item.id)return;
   let img=item.img||null;
   const ov=document.createElement('div');ov.className='ov';
   const fld=([k,l,t,o])=>{

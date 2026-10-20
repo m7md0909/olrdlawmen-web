@@ -212,6 +212,11 @@ footer{border-top:1px solid var(--brass-d);padding:16px var(--gx2) calc(16px + e
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
 .mv{white-space:nowrap}.btn.ar{padding:2px 8px;line-height:1.4}
+
+/* صفوف متساوية: لا التفاف للنص، والجدول يتمدد ويظهر له سكرول أفقي عند الحاجة */
+.tw table{width:max-content;min-width:100%}
+.tw th,.tw td{white-space:nowrap}
+.tw td.empty{white-space:normal}
 </style></head>
 <body><div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>

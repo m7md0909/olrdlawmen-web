@@ -428,6 +428,8 @@ window.OUTLAW_ADAPTER=async function(){
     async signIn(email,password){const {error}=await sb.auth.signInWithPassword({email,password});if(error)throw error},
     async signUp(email,password,name){const {data,error}=await sb.auth.signUp({email,password,options:{data:{name}}});if(error)throw error;return{needsConfirm:!data.session}},
     async oauth(provider){const {error}=await sb.auth.signInWithOAuth({provider,options:{redirectTo:location.origin+location.pathname}});if(error)throw error},
+    async identities(){const {data,error}=await sb.auth.getUserIdentities();if(error)throw error;return (data.identities||[]).map(i=>i.provider)},
+    async link(provider){const {error}=await sb.auth.linkIdentity({provider,options:{redirectTo:location.origin+location.pathname}});if(error)throw error},
     async signOut(){await sb.auth.signOut({scope:'local'})},
     async listProfiles(){const {data,error}=await sb.from('profiles').select('*').order('created_at');if(error)throw error;return data},
     async setRole(id,role){const {error}=await sb.from('profiles').update({role}).eq('id',id);if(error)throw error}
@@ -512,7 +514,7 @@ function authBox(){
   if(caps.auth){
     if(!caps.profile)return `<button class="btn sm" data-act="login">دخول</button>`;
     const nm=e(caps.profile.name||caps.profile.email||'');
-    return `<span class="mode"><span class="tag ${caps.level?'ok':'dim'}">${ROLE_AR[caps.profile.role]||''}</span> <bdi>${nm}</bdi> <button class="btn ghost sm" data-act="logout">خروج</button></span>`;
+    return `<span class="mode"><span class="tag ${caps.level?'ok':'dim'}">${ROLE_AR[caps.profile.role]||''}</span> <button class="lnk" data-act="me" title="حسابي وربط الحسابات"><bdi>${nm}</bdi></button> <button class="btn ghost sm" data-act="logout">خروج</button></span>`;
   }
   return caps.write?'<span class="mode tag ok">وضع التعديل</span>':'';
 }
@@ -593,6 +595,17 @@ const CANDEL={members:1,wings:1,banned:1};
 function resizeImg(file){return new Promise((res,rej)=>{const url=URL.createObjectURL(file),im=new Image();im.onload=()=>{const m=1000,k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(url);c.toBlob(b=>b?res(b):rej(new Error('x')),'image/webp',.85)};im.onerror=()=>rej(new Error('x'));im.src=url})}
 
 async function loadProfiles(){try{window.__profiles=await caps.auth.listProfiles()}catch(_){window.__profiles=[]}if(ui.route==='accounts')render()}
+async function meDialog(){
+  const ov=document.createElement('div');ov.className='ov';
+  const P=caps.profile||{};let ids=[];
+  try{ids=await caps.auth.identities()}catch(_){}
+  const NAMES={email:'البريد وكلمة المرور',discord:'Discord',google:'Google'};
+  const row=pv=>{const on=ids.includes(pv);return `<div class="fld"><label>${NAMES[pv]}</label>${on?'<span class="tag ok">مربوط</span>':`<button class="btn ghost" type="button" data-lk="${pv}">ربط ${NAMES[pv]} بحسابي</button>`}</div>`};
+  ov.innerHTML=`<div class="sheet dlg"><h2>حسابي</h2><div class="fld"><label>الاسم</label><div>${e(P.name||'-')}</div></div><div class="fld"><label>البريد</label><div class="ltr">${e(P.email||'-')}</div></div><div class="fld"><label>الدور</label><div>${e(ROLE_AR[P.role]||'')}</div></div><h4 style="color:var(--brass-l);margin:14px 0 8px">طرق الدخول المربوطة</h4><p class="lead" style="margin:0 0 10px;font-size:1rem">اربط أكثر من طريقة بنفس الحساب، فتدخل بأي وحدة منها وتبقى صلاحياتك كما هي.</p>${['email','discord','google'].filter(x=>x==='email'?ids.includes('email'):true).map(row).join('')}<div class="err" id="er" hidden></div><div class="foot"><button class="btn ghost" type="button" id="cn">إغلاق</button></div></div>`;
+  document.body.appendChild(ov);
+  $('#cn',ov).onclick=()=>ov.remove();ov.addEventListener('mousedown',ev=>{if(ev.target===ov)ov.remove()});
+  ov.querySelectorAll('[data-lk]').forEach(b=>b.onclick=async()=>{try{await caps.auth.link(b.dataset.lk)}catch(err){const er=$('#er',ov);er.textContent='تعذر الربط. فعّل خيار Manual linking في إعدادات Supabase (انظر الخطوات)';er.hidden=false}});
+}
 function loginDialog(){
   const ov=document.createElement('div');ov.className='ov';let mode='in';
   const draw=()=>{ov.innerHTML=`<form class="sheet dlg" novalidate><h2>${mode==='in'?'تسجيل الدخول':'إنشاء حساب'}</h2>${mode==='up'?'<div class="fld"><label for="a_n">الاسم</label><input id="a_n" type="text" autocomplete="name"></div>':''}<div class="fld"><label for="a_e">البريد الإلكتروني</label><input id="a_e" type="email" dir="ltr" autocomplete="email"></div><div class="fld"><label for="a_p">كلمة المرور</label><input id="a_p" type="password" dir="ltr" autocomplete="${mode==='in'?'current-password':'new-password'}"><small>${mode==='up'?'6 أحرف على الأقل. الحساب الجديد يبدأ كمشاهد، والمدير يرفع صلاحيته.':''}</small></div><div class="err" id="er" hidden></div><div class="foot"><button class="btn" type="submit">${mode==='in'?'دخول':'إنشاء الحساب'}</button><button class="btn ghost" type="button" data-oa="discord">Discord</button><button class="btn ghost" type="button" data-oa="google">Google</button><button class="btn ghost" type="button" id="cn">إلغاء</button><span class="sp"></span><button class="lnk" type="button" id="sw">${mode==='in'?'ما عندي حساب':'عندي حساب'}</button></div></form>`;
@@ -671,6 +684,7 @@ document.addEventListener('click',async ev=>{
   if(t.dataset.rs){ui.rStatus=t.dataset.rs;render();return}
   if(t.dataset.bt){ui.bType=t.dataset.bt;render();return}
   if(t.dataset.act==='login'){loginDialog();return}
+  if(t.dataset.act==='me'){meDialog();return}
   if(t.dataset.act==='logout'){try{await caps.auth.signOut()}catch(_){}caps.refresh&&caps.refresh(null);toast('تم تسجيل الخروج');return}
   if(t.dataset.act==='hidedemo'){await ensureSeeded();try{await caps.db.doc('config/site').set({example:false});toast('تم إخفاء الشريط')}catch(_){toast('تعذر الحفظ')}}
 });

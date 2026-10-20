@@ -1,4 +1,4 @@
-صي<!doctype html>
+<!doctype html>
 <html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>OUTLAW — مكتب الشيرف</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=Noto+Naskh+Arabic:wght@400;700&family=Rye&family=Special+Elite&display=swap" rel="stylesheet">
 <style>/* ground: navy + brass. Every surface (cards, tables, forms) stays in the navy family. */
@@ -211,7 +211,7 @@ footer{border-top:1px solid var(--brass-d);padding:16px var(--gx2) calc(16px + e
 <body><div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
-/* ===== إعداد الربط: غيّر القيمتين فقط (من Supabase: Project Settings ثم API) ===== */
+/* ===== إعداد الربط: غيّر القيمتين فقط ===== */
 window.OUTLAW_CONFIG={
   url:"https://uunnwpaaivizhtmlmkmr.supabase.co",
   key:"sb_publishable_T3R7SEP08t51R7SQ1XYhWw_R5WzuEpZ"
@@ -426,6 +426,7 @@ window.OUTLAW_ADAPTER=async function(){
     onChange(cb){sb.auth.onAuthStateChange(()=>{setTimeout(async()=>cb(await prof()))})},
     async signIn(email,password){const {error}=await sb.auth.signInWithPassword({email,password});if(error)throw error},
     async signUp(email,password,name){const {data,error}=await sb.auth.signUp({email,password,options:{data:{name}}});if(error)throw error;return{needsConfirm:!data.session}},
+    async oauth(provider){const {error}=await sb.auth.signInWithOAuth({provider,options:{redirectTo:location.origin+location.pathname}});if(error)throw error},
     async signOut(){await sb.auth.signOut()},
     async listProfiles(){const {data,error}=await sb.from('profiles').select('*').order('created_at');if(error)throw error;return data},
     async setRole(id,role){const {error}=await sb.from('profiles').update({role}).eq('id',id);if(error)throw error}
@@ -593,8 +594,8 @@ function resizeImg(file){return new Promise((res,rej)=>{const url=URL.createObje
 async function loadProfiles(){try{window.__profiles=await caps.auth.listProfiles()}catch(_){window.__profiles=[]}if(ui.route==='accounts')render()}
 function loginDialog(){
   const ov=document.createElement('div');ov.className='ov';let mode='in';
-  const draw=()=>{ov.innerHTML=`<form class="sheet dlg" novalidate><h2>${mode==='in'?'تسجيل الدخول':'إنشاء حساب'}</h2>${mode==='up'?'<div class="fld"><label for="a_n">الاسم</label><input id="a_n" type="text" autocomplete="name"></div>':''}<div class="fld"><label for="a_e">البريد الإلكتروني</label><input id="a_e" type="email" dir="ltr" autocomplete="email"></div><div class="fld"><label for="a_p">كلمة المرور</label><input id="a_p" type="password" dir="ltr" autocomplete="${mode==='in'?'current-password':'new-password'}"><small>${mode==='up'?'6 أحرف على الأقل. الحساب الجديد يبدأ كمشاهد، والمدير يرفع صلاحيته.':''}</small></div><div class="err" id="er" hidden></div><div class="foot"><button class="btn" type="submit">${mode==='in'?'دخول':'إنشاء الحساب'}</button><button class="btn ghost" type="button" id="cn">إلغاء</button><span class="sp"></span><button class="lnk" type="button" id="sw">${mode==='in'?'ما عندي حساب':'عندي حساب'}</button></div></form>`;
-    $('#cn',ov).onclick=()=>ov.remove();$('#sw',ov).onclick=()=>{mode=mode==='in'?'up':'in';draw()};
+  const draw=()=>{ov.innerHTML=`<form class="sheet dlg" novalidate><h2>${mode==='in'?'تسجيل الدخول':'إنشاء حساب'}</h2>${mode==='up'?'<div class="fld"><label for="a_n">الاسم</label><input id="a_n" type="text" autocomplete="name"></div>':''}<div class="fld"><label for="a_e">البريد الإلكتروني</label><input id="a_e" type="email" dir="ltr" autocomplete="email"></div><div class="fld"><label for="a_p">كلمة المرور</label><input id="a_p" type="password" dir="ltr" autocomplete="${mode==='in'?'current-password':'new-password'}"><small>${mode==='up'?'6 أحرف على الأقل. الحساب الجديد يبدأ كمشاهد، والمدير يرفع صلاحيته.':''}</small></div><div class="err" id="er" hidden></div><div class="foot"><button class="btn" type="submit">${mode==='in'?'دخول':'إنشاء الحساب'}</button><button class="btn ghost" type="button" data-oa="discord">Discord</button><button class="btn ghost" type="button" data-oa="google">Google</button><button class="btn ghost" type="button" id="cn">إلغاء</button><span class="sp"></span><button class="lnk" type="button" id="sw">${mode==='in'?'ما عندي حساب':'عندي حساب'}</button></div></form>`;
+    ov.querySelectorAll('[data-oa]').forEach(x=>x.onclick=async()=>{try{await caps.auth.oauth(x.dataset.oa)}catch(err){const er=$('#er',ov);er.textContent='تعذر الدخول، تأكد من تفعيل هذه الطريقة في الإعدادات';er.hidden=false}});$('#cn',ov).onclick=()=>ov.remove();$('#sw',ov).onclick=()=>{mode=mode==='in'?'up':'in';draw()};
     $('form',ov).onsubmit=async ev=>{ev.preventDefault();const er=$('#er',ov);er.hidden=true;
       try{const em=$('#a_e',ov).value.trim(),pw=$('#a_p',ov).value;
         if(mode==='in')await caps.auth.signIn(em,pw);else{const r=await caps.auth.signUp(em,pw,$('#a_n',ov).value.trim());if(r&&r.needsConfirm){er.textContent='وصلك بريد لتأكيد الحساب، افتحه ثم سجّل الدخول.';er.hidden=false;return}}

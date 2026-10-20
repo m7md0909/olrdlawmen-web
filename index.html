@@ -210,6 +210,8 @@ footer{border-top:1px solid var(--brass-d);padding:16px var(--gx2) calc(16px + e
 
 @media(max-width:560px){.pagehead{align-items:flex-start}.star{width:56px;height:56px}.sheet{padding:18px 14px 22px}.rank{grid-template-columns:1fr}.rank .star{width:52px;height:52px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.mv{white-space:nowrap}.btn.ar{padding:2px 8px;line-height:1.4}
 </style></head>
 <body><div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
@@ -842,7 +844,7 @@ window.SITE = {
 };
 (function(S){
   const p=(n,i)=>n+String(i+1).padStart(2,'0');
-  S.members.forEach((x,i)=>{x.id=p('m',i)});
+  S.members.forEach((x,i)=>{x.id=p('m',i);x.o=i});
   S.banned.forEach((x,i)=>{x.id=p('b',i);x.o=i});
   S.wings.forEach((x,i)=>{x.o=i});
   S.degrees.forEach(x=>{x.id=String(x.n)});
@@ -915,6 +917,7 @@ const e=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;
 const $=(s,r=document)=>r.querySelector(s);
 const NAV=[["home","الرئيسية"],["roster","المنفذون"],["ranks","سلم الصلاحيات"],["promo","الترقيات والمحاسبة"],["wings","Wings"],["banned","الممنوعات"]];
 const rank=id=>S.ranks.find(r=>r.id===+id)||{id:+id,name:'غير معروفة',stars:0};
+const ord=(a,b)=>b.rank-a.rank||(a.o??1e9)-(b.o??1e9)||a.name.localeCompare(b.name);
 const ranksDesc=()=>[...S.ranks].sort((a,b)=>b.id-a.id);
 const ranksAsc=()=>[...S.ranks].sort((a,b)=>a.id-b.id);
 const showDemo=()=>live.site?live.site.example!==false:FALL.example;
@@ -988,6 +991,22 @@ const edBtn=(kind,id,label='تعديل')=>canKind(kind)?`<button class="btn ghos
 const addBtn=(kind,label)=>canKind(kind)?`<button class="btn" data-ed="${kind}" data-id="">+ ${label}</button>`:'';
 const lines=a=>`<ul>${(a||[]).map(x=>`<li>${e(x)}</li>`).join('')}</ul>`;
 
+const mvBtns=(x,rows)=>{
+  if(ui.rQ.trim()||ui.rStatus!=='all')return '';
+  const g=S.members.filter(m=>m.rank===x.rank).sort(ord),i=g.findIndex(m=>m.id===x.id);
+  return `<button class="btn ghost sm ar" data-mv="up" data-id="${e(x.id)}" aria-label="رفع" title="رفع"${i<=0?' disabled':''}>▲</button><button class="btn ghost sm ar" data-mv="down" data-id="${e(x.id)}" aria-label="تنزيل" title="تنزيل"${i<0||i>=g.length-1?' disabled':''}>▼</button> `;
+};
+async function moveMember(id,dir){
+  const m=S.members.find(x=>x.id===id);if(!m)return;
+  const g=S.members.filter(x=>x.rank===m.rank).sort(ord),i=g.findIndex(x=>x.id===id),j=dir==='up'?i-1:i+1;
+  if(j<0||j>=g.length)return;
+  await ensureSeeded();
+  [g[i],g[j]]=[g[j],g[i]];
+  const jobs=[];
+  g.forEach((x,k)=>{if(x.o!==k){x.o=k;jobs.push(save('members',{...x}))}});
+  const r=await Promise.all(jobs);
+  if(r.some(v=>!v))toast('تعذر حفظ الترتيب');else render();
+}
 const V={
 accounts(){
   if(caps.level<3)return ph("الحسابات","هذه الصفحة للمدير فقط.");
@@ -1003,10 +1022,10 @@ home(){
 },
 roster(){
   const q=ui.rQ.trim().toLowerCase();
-  const rows=S.members.filter(x=>(!ui.rRank||x.rank===ui.rRank)&&(ui.rStatus==='all'||x.status===ui.rStatus)&&(!q||(x.name+' '+(x.discord||'')+' '+x.post+' '+rank(x.rank).name).toLowerCase().includes(q))).sort((a,b)=>b.rank-a.rank||a.name.localeCompare(b.name));
+  const rows=S.members.filter(x=>(!ui.rRank||x.rank===ui.rRank)&&(ui.rStatus==='all'||x.status===ui.rStatus)&&(!q||(x.name+' '+(x.discord||'')+' '+x.post+' '+rank(x.rank).name).toLowerCase().includes(q))).sort(ord);
   return ph("المنفذون","أسماء رجال القانون ورتبهم ومناصبهم.")+`<div class="sheet"><div class="bar"><input type="search" id="q" value="${e(ui.rQ)}" placeholder="ابحث بالاسم أو الديسكورد أو المنصب" aria-label="بحث"><select id="rk" aria-label="الرتبة"><option value="0">كل الرتب</option>${ranksDesc().map(r=>`<option value="${r.id}"${ui.rRank===r.id?' selected':''}>${e(r.name)}</option>`).join('')}</select>${addBtn('members','إضافة منفذ')}</div>
   <div class="chips" role="group" aria-label="الحالة">${[['all','الكل'],...Object.entries(S.statuses)].map(([k,v])=>`<button class="chip" data-rs="${k}" aria-pressed="${k===ui.rStatus}">${v}</button>`).join('')}</div>
-  <div class="count">عرض ${rows.length} من ${S.members.length}</div><div class="tw"><table><thead><tr><th>الاسم</th><th>Discord</th><th>الرتبة</th><th>المنصب</th><th>النقاط</th><th>معدات خاصة</th><th>الحالة</th>${canKind('members')?'<th></th>':''}</tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td><bdi class="ltr">${e(x.name)}</bdi></td><td class="num">${e(x.discord||'-')}</td><td><span class="rk"><i></i>${e(rank(x.rank).name)}</span></td><td>${e(x.post||'-')}</td><td class="num">${x.points!=null?e(x.points):'-'}</td><td>${x.gear===true?'نعم':x.gear===false?'لا':'-'}</td><td><span class="st ${e(x.status)}">${e(S.statuses[x.status]||x.status)}</span></td>${canKind('members')?`<td>${edBtn('members',x.id)}</td>`:''}</tr>`).join(''):`<tr><td colspan="8" class="empty">ما في نتائج مطابقة</td></tr>`}</tbody></table></div></div>`;
+  <div class="count">عرض ${rows.length} من ${S.members.length}</div><div class="tw"><table><thead><tr><th>الاسم</th><th>Discord</th><th>الرتبة</th><th>المنصب</th><th>النقاط</th><th>معدات خاصة</th><th>الحالة</th>${canKind('members')?'<th></th>':''}</tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td><bdi class="ltr">${e(x.name)}</bdi></td><td class="num">${e(x.discord||'-')}</td><td><span class="rk"><i></i>${e(rank(x.rank).name)}</span></td><td>${e(x.post||'-')}</td><td class="num">${x.points!=null?e(x.points):'-'}</td><td>${x.gear===true?'نعم':x.gear===false?'لا':'-'}</td><td><span class="st ${e(x.status)}">${e(S.statuses[x.status]||x.status)}</span></td>${canKind('members')?`<td class="mv">${mvBtns(x,rows)}${edBtn('members',x.id)}</td>`:''}</tr>`).join(''):`<tr><td colspan="8" class="empty">ما في نتائج مطابقة</td></tr>`}</tbody></table></div></div>`;
 },
 ranks(){
   return ph("سلم الصلاحيات","كل رتبة وما تملكه من صلاحيات وما يُحظر عليها، من الأعلى إلى الأدنى.")+`<div class="sheet">${canKind('ranks')?`<div class="acts" style="margin:0 0 6px">${addBtn('ranks','إضافة رتبة عليا')}</div>`:''}${ranksDesc().map(r=>`<article class="rank" id="r${r.id}"><div class="star">${r.id}</div><div><div class="nm"><h3>${e(r.name)}</h3><span class="en">${e(r.en)}</span></div>${r.stars>0?stars(r.stars):''}</div><div class="body">${r.desc?`<p class="lead" style="margin:6px 0 0">${e(r.desc)}</p>`:''}${(r.can||[]).length||(r.cannot||[]).length?`<div class="cols">`:'<div>'}${(r.can||[]).length?`<div><h4>الصلاحيات</h4>${lines(r.can)}</div>`:''}${(r.cannot||[]).length?`<div class="no"><h4>غير مسموح</h4>${lines(r.cannot)}</div>`:''}</div><div class="acts"><button class="lnk" data-go="roster" data-rank="${r.id}">عرض منفذي هذه الرتبة</button>${edBtn('ranks',r.id)}</div></div></article>`).join('')}</div>`;
@@ -1118,7 +1137,7 @@ function openEditor(kind,id){
     if(need&&!out[need]){er.textContent='الاسم مطلوب';er.hidden=false;return}
     if(isNew){
       if(kind==='ranks'){out.id=Math.max(0,...S.ranks.map(r=>r.id))+1}
-      else if(kind==='members'){out.id='m'+Date.now().toString(36);out.joined=out.joined||'';}
+      else if(kind==='members'){out.id='m'+Date.now().toString(36);out.joined=out.joined||'';out.o=Date.now();}
       else if(kind==='wings'){out.id='w'+Date.now().toString(36);out.o=Date.now()}
       else if(kind==='banned'){out.id='b'+Date.now().toString(36);out.o=Date.now()}
     }
@@ -1139,8 +1158,9 @@ function openEditor(kind,id){
 
 /* ---------- events ---------- */
 document.addEventListener('click',async ev=>{
-  const t=ev.target.closest('[data-go],[data-ed],[data-rs],[data-bt],[data-act]');if(!t)return;
+  const t=ev.target.closest('[data-go],[data-mv],[data-ed],[data-rs],[data-bt],[data-act]');if(!t)return;
   if(t.dataset.go){ev.preventDefault();go(t.dataset.go,{rank:t.dataset.rank!==undefined?+t.dataset.rank:undefined,scroll:t.dataset.scroll});return}
+  if(t.dataset.mv){t.disabled=true;await moveMember(t.dataset.id,t.dataset.mv);return}
   if(t.dataset.ed!==undefined){openEditor(t.dataset.ed,t.dataset.id);return}
   if(t.dataset.rs){ui.rStatus=t.dataset.rs;render();return}
   if(t.dataset.bt){ui.bType=t.dataset.bt;render();return}

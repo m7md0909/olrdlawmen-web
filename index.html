@@ -27,7 +27,7 @@ p{margin:0}
 
 /* header */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--navy);border-bottom:1px solid var(--brass-d)}
-.top-in{max-width:1120px;margin:0 auto;padding:8px var(--gx2) 0 var(--gx);display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap}
+.top-in{max-width:1480px;margin:0 auto;padding:8px var(--gx2) 0 var(--gx);display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap}
 .brand{order:1;flex:none;display:flex;align-items:center;gap:10px;font-family:var(--f-mark);color:var(--brass);letter-spacing:.12em;font-size:1.15rem;padding-bottom:8px}
 .brand img{width:36px;height:36px}
 .nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;order:2;flex:1 1 0;min-width:0}
@@ -41,7 +41,7 @@ p{margin:0}
 .demo button{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:2px;padding:0 10px;cursor:pointer;font-size:.85rem}
 
 /* layout */
-.wrap{max-width:1120px;margin:0 auto;padding:28px var(--gx2) 56px var(--gx)}
+.wrap{max-width:1480px;margin:0 auto;padding:28px var(--gx2) 56px var(--gx)}
 .pagehead{display:flex;align-items:center;gap:18px;margin-bottom:24px}
 .pagehead>div:last-child{min-width:0}
 .star{flex:none;width:72px;height:72px;display:grid;place-items:center;padding-top:6px;clip-path:var(--star);background:linear-gradient(180deg,var(--brass-l),var(--brass) 55%,var(--brass-d));color:var(--navy);font-family:var(--f-mark);font-size:.95rem;direction:ltr}
@@ -217,6 +217,9 @@ footer{border-top:1px solid var(--brass-d);padding:16px var(--gx2) calc(16px + e
 .tw table{width:max-content;min-width:100%}
 .tw th,.tw td{white-space:nowrap}
 .tw td.empty{white-space:normal}
+
+.tw th,.tw td{padding-inline:9px}
+.sheet:has(.tw){padding-inline:16px}
 </style></head>
 <body><div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>

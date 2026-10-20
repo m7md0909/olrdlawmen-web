@@ -82,10 +82,12 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brass-l)
 /* tables */
 .tw{overflow-x:auto;border:1px solid var(--line);border-radius:2px}
 table{width:100%;border-collapse:collapse;font-size:1.05rem}
-th,td{padding:9px 12px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.7}
+th,td{padding:9px 12px;text-align:center;border-bottom:1px solid var(--line);vertical-align:middle;line-height:1.7}
 th{background:var(--navy3);color:var(--brass-l);font-family:var(--f-head);white-space:nowrap}
 tbody tr:nth-child(even){background:rgba(255,255,255,.03)}
 td.num,.ltr{direction:ltr;text-align:left;font-family:var(--f-mono)}
+td.num{text-align:center}
+td bdi.ltr{display:inline-block;text-align:center}
 .rk{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-head);font-weight:700;color:var(--brass-l);white-space:nowrap}
 .rk i{width:14px;height:14px;background:var(--brass);clip-path:var(--star);flex:none}
 .st{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
@@ -214,177 +216,636 @@ footer{border-top:1px solid var(--brass-d);padding:16px var(--gx2) calc(16px + e
 <script>
 /* ===== إعداد الربط: غيّر القيمتين فقط ===== */
 window.OUTLAW_CONFIG={
-  url:"https://uunnwpaaivizhtmlmkmr.supabase.co",
-  key:"sb_publishable_T3R7SEP08t51R7SQ1XYhWw_R5WzuEpZ"
+  url:"ضع هنا Project URL",
+  key:"ضع هنا anon public key"
 };
 </script>
-<script>/* ============================================================
-   OUTLAW — بيانات الموقع كلها هنا. عدّل هذا الملف فقط.
-   example:true يظهر شريط "بيانات تجريبية"، غيّره إلى false بعد ما تحط بياناتك.
-   ============================================================ */
+<script>/* OUTLAW: بيانات الموقع الافتراضية (تُعرض إذا ما اتصل الموقع بقاعدة البيانات). المصدر: جدول المكتب. */
 window.SITE = {
-  example: true,
-  name: "OUTLAW",
-  office: "مكتب الشيرف",
-  region: "New Austin & West Elizabeth",
-
-  /* ---------- سلم الرتب (من الأدنى للأعلى) ---------- */
-  ranks: [
-    { id:1, name:"متدرب", en:"Deputy Trainee", stars:0,
-      desc:"رجل قانون جديد في فترة التجربة. يعمل تحت إشراف رتبة أعلى ولا يتصرف منفرداً في الحالات الجنائية.",
-      can:["الاستجابة للبلاغات البسيطة بمرافقة رجل قانون أعلى","التعريف بالنفس وأخذ الإفادات الأولية","حراسة موقع الحدث وتأمينه"],
-      cannot:["رمي الحبل أو ربط أي شخص","تفتيش المواطنين بدون إذن رتبة أعلى","إطلاق النار إلا لحماية النفس"] },
-    { id:2, name:"جندي", en:"Deputy", stars:1,
-      desc:"رجل قانون معتمد يباشر الدوريات والبلاغات ضمن نطاقه وفق ما ينص عليه الكتيب.",
-      can:["مباشرة البلاغات ضمن نطاق العمل","تفتيش المواطن عند وجود سبب واضح (بند 4.1 و4.2)","الربط بعد ثلاثة تنبيهات أثناء الهروب على الأقدام","إطلاق النار على من يوجّه سلاحه داخل المدينة"],
-      cannot:["إيقاف قتال بين مواطنين","إسقاط التهم","الإطلاق على من لا يحمل سلاحاً"] },
-    { id:3, name:"عريف", en:"Corporal", stars:2,
-      desc:"أول رتبة إشرافية. يتولى متابعة الجنود في الدورية ويتصرف في المشاجرات داخل المدينة.",
-      can:["إيقاف القتال بين مواطنين أو الإشراف عليه (بند 1.6)","توجيه المتدربين والجنود أثناء الدورية","كتابة تقرير الحالة ورفعه"],
-      cannot:["إسقاط التهم","قيادة المداهمات","استعمال الحبل لإسقاط الراكب من الحصان"] },
-    { id:4, name:"عريف أول", en:"Senior Corporal", stars:3,
-      desc:"مسؤول عن أكثر من دورية ويُستشار في التهم غير الجنائية.",
-      can:["المشاركة في قرار إسقاط تهمة غير جنائية (بند 1.5)","الإشراف على أكثر من دورية","الإشراف على تدريب المتدربين"],
-      cannot:["الإطلاق على من لا يحمل سلاحاً","استكمال حالة قبض عليها غيره","قيادة المداهمات"] },
-    { id:5, name:"رقيب", en:"Sergeant", stars:4,
-      desc:"رتبة قيادية ميدانية. يملك صلاحيات استثنائية في استعمال الحبل والإطلاق ويوزّع الحالات.",
-      can:["رمي الحبل لإسقاط الهارب على الحصان بعد دقيقتين (بند 2.2)","الإطلاق على غير المسلح في الحالات المستثناة (بند 1.8)","استكمال الحالة بنفسه أو تعيين من يتولاها (بند 1.11)","الموافقة على تفتيش الموقع المشبوه"],
-      cannot:["قيادة المداهمات الكبرى بدون ملازم","فصل رجل قانون","فتح وينق جديد"] },
-    { id:6, name:"ملازم", en:"Lieutenant", stars:5,
-      desc:"قائد المداهمات والعمليات. يعتمد الخطط ويرفع التقارير للقيادة.",
-      can:["قيادة المداهمات (مزارع الحشيش ومصانع المونشاين)","اعتماد خطط التعامل مع السرقات الكبرى","رفع توصيات الترقية والمحاسبة","تعيين مسؤول وينق مؤقت"],
-      cannot:["فصل رجل قانون بدون موافقة القيادة","تعديل الكتيب"] },
-    { id:7, name:"نقيب", en:"Captain", stars:6,
-      desc:"مساعد الشيرف. يشرف على الوينقات ويعتمد الترقيات والعقوبات حتى الدرجة الخامسة.",
-      can:["اعتماد الترقيات حتى رتبة ملازم","إيقاف وتنزيل رتبة رجال القانون","الإشراف على جميع الوينقات","تمثيل المكتب في غياب الشيرف"],
-      cannot:["فصل نهائي بدون موافقة الشيرف","تعديل هيكل الرتب"] },
-    { id:8, name:"شيرف", en:"Sheriff", stars:7,
-      desc:"قائد المكتب. مرجع القرار النهائي في كل الأمور.",
-      can:["اعتماد الفصل والعودة بعد الفصل","تعديل الكتيب والأنظمة","اعتماد ترقية النقيب","فتح الوينقات وإغلاقها"],
-      cannot:[] }
-  ],
-
-  /* ---------- المنفذون ---------- */
-  statuses: { active:"في الخدمة", leave:"إجازة", suspended:"موقوف" },
-  members: [
-    { name:"Ward Callahan",  rank:8, post:"شيرف المكتب",           joined:"2025-03-02", status:"active" },
-    { name:"Hollis Marsh",   rank:7, post:"مساعد الشيرف",          joined:"2025-03-09", status:"active" },
-    { name:"Rowan Pike",     rank:7, post:"مسؤول وينق التحري",     joined:"2025-04-14", status:"active" },
-    { name:"Tobias Vance",   rank:6, post:"قائد المداهمات",        joined:"2025-05-21", status:"active" },
-    { name:"Clement Ridley", rank:6, post:"مسؤول وينق الدوريات",   joined:"2025-06-02", status:"leave" },
-    { name:"Amos Burke",     rank:5, post:"مشرف دورية نيو أوستن",  joined:"2025-07-11", status:"active" },
-    { name:"Silas Brandt",   rank:5, post:"مشرف دورية ويست إليزابيث", joined:"2025-08-03", status:"active" },
-    { name:"Nathan Greer",   rank:4, post:"مدرّب",                 joined:"2025-09-17", status:"active" },
-    { name:"Walt Everett",   rank:4, post:"دورية",                 joined:"2025-10-01", status:"active" },
-    { name:"Caleb Rourke",   rank:3, post:"دورية",                 joined:"2025-11-12", status:"active" },
-    { name:"Jonah Pratt",    rank:3, post:"دورية",                 joined:"2025-12-05", status:"suspended" },
-    { name:"Eli Hartwell",   rank:2, post:"دورية",                 joined:"2026-01-19", status:"active" },
-    { name:"Dean Mercer",    rank:2, post:"دورية",                 joined:"2026-02-08", status:"active" },
-    { name:"Wyatt Locke",    rank:2, post:"وينق الحدود",           joined:"2026-03-23", status:"active" },
-    { name:"Ira Dalton",     rank:1, post:"تحت التدريب",           joined:"2026-09-04", status:"active" },
-    { name:"Reuben Sloan",   rank:1, post:"تحت التدريب",           joined:"2026-09-28", status:"active" }
-  ],
-
-  /* ---------- درجات المخالفات (6 درجات) ---------- */
-  degrees: [
-    { n:1, name:"مخالفة بسيطة",    desc:"تقصير خفيف لا يؤثر على المواطنين أو سير الحالة.",
-      ex:["التأخر عن موعد الدورية","ألفاظ غير لائقة بسيطة","إهمال في كتابة التقرير"] },
-    { n:2, name:"إهمال",           desc:"عدم أداء واجب مطلوب ضمن نطاق العمل.",
-      ex:["عدم مباشرة بلاغ ضمن النطاق (بند 1.3)","عدم التعريف بالنفس قبل النقاش (بند 1.1)","ترك الدورية بدون إبلاغ"] },
-    { n:3, name:"تجاوز إجرائي",    desc:"مخالفة بند إجرائي في الكتيب بدون ضرر جسيم.",
-      ex:["تفتيش بدون سبب (بند 1.9 و4.1)","استعمال الحبل لسبب تافه (بند 2.4)","إطلاق النار على الحصان بدون شرطه (بند 3.2)"] },
-    { n:4, name:"تجاوز جسيم",      desc:"تصرف يضر بمواطن أو بسمعة المكتب.",
-      ex:["إطلاق النار على مواطن غير مسلح بدون استثناء (بند 1.8)","المضايقة أو التعالي على المواطنين (بند 1.2)","تفتيش للانتقام الشخصي (بند 4.4)"] },
-    { n:5, name:"إساءة استعمال سلطة", desc:"استغلال الرتبة أو الصلاحيات لمصلحة شخصية.",
-      ex:["تصفية خلافات شخصية بالصلاحيات","أخذ وعطاء مع مطلوب أو مخالف","رمي الحبل أو الربط خارج الحالات المسموحة"] },
-    { n:6, name:"خيانة الأمانة",   desc:"سلوك يهدم الثقة في رجل القانون كلياً.",
-      ex:["تسريب خطط المداهمات","التعاون مع مطلوبين","أخذ المصادرات لنفسه"] }
-  ],
-
-  /* ---------- العقوبات المتدرجة ---------- */
-  ladder: ["تنبيه شفهي","تنبيه كتابي","إنذار رسمي","إيقاف 24 ساعة","إيقاف 3 أيام","تنزيل رتبة","تجميد الرتبة والتحقيق","فصل"],
-  /* لكل رتبة: رقم الخطوة في السلم أعلاه لكل درجة من 1 إلى 6.
-     عدّل الأرقام لتغيير المحاسبة. */
-  penalties: {
-    1:[0,1,3,4,5,7],
-    2:[0,1,3,4,5,7],
-    3:[0,1,3,4,5,7],
-    4:[0,2,3,5,6,7],
-    5:[1,2,4,5,6,7],
-    6:[1,3,4,5,7,7],
-    7:[2,3,5,6,7,7],
-    8:[2,4,5,6,7,7]
+ "example": false,
+ "name": "OUTLAW",
+ "office": "مكتب الشيرف",
+ "region": "New Austin and West Elizabeth Sheriff Office",
+ "ranks": [
+  {
+   "id": 1,
+   "name": "متدرب",
+   "en": "Trainee",
+   "stars": 0,
+   "desc": "",
+   "can": [],
+   "cannot": []
   },
-
-  /* ---------- متطلبات الترقية (من رتبة إلى التي تليها) ---------- */
-  promotions: {
-    1:{ hours:10,  clean:7,  maxDeg:"لا مخالفة فوق الدرجة 1", exam:"اختبار الكتيب (80% فما فوق)", rec:"توصية من مدرّب",         extra:"إكمال 3 دوريات مع مرافق" },
-    2:{ hours:25,  clean:14, maxDeg:"لا مخالفة فوق الدرجة 2", exam:"اختبار ميداني",              rec:"توصية من رقيب",         extra:"مباشرة 10 بلاغات موثقة" },
-    3:{ hours:40,  clean:14, maxDeg:"لا مخالفة فوق الدرجة 2", exam:"اختبار الكتيب (85% فما فوق)", rec:"توصية من رقيب",         extra:"الإشراف على 3 مشاجرات بدون تجاوز" },
-    4:{ hours:60,  clean:21, maxDeg:"لا مخالفة فوق الدرجة 2", exam:"مقابلة مع الرقباء",           rec:"توصية من ملازم",        extra:"تدريب متدرب واحد على الأقل" },
-    5:{ hours:90,  clean:30, maxDeg:"لا مخالفة فوق الدرجة 3", exam:"مقابلة مع القيادة",           rec:"توصية من ملازم",        extra:"المشاركة في مداهمة واحدة" },
-    6:{ hours:120, clean:45, maxDeg:"لا مخالفة فوق الدرجة 3", exam:"مقابلة مع النقيب",            rec:"توصية من نقيب",         extra:"قيادة مداهمة ناجحة" },
-    7:{ hours:150, clean:60, maxDeg:"لا مخالفة فوق الدرجة 3", exam:"اعتماد الشيرف",               rec:"اختيار مباشر من الشيرف", extra:"لا يوجد" }
+  {
+   "id": 2,
+   "name": "نائب عريف",
+   "en": "Lance Corporal",
+   "stars": 0,
+   "desc": "",
+   "can": [],
+   "cannot": []
   },
-
-  /* ---------- Wings ---------- */
-  wings: [
-    { id:"patrol", ar:"وينق الدوريات", en:"Patrol Wing", head:"Clement Ridley", minRank:2, members:9, open:true,
-      desc:"الواجهة اليومية للمكتب: دوريات المدن، البلاغات، والتعامل مع المواطنين.",
-      rules:["لا تقل الدورية عن رجلين في المدن الكبرى","كل حالة تُسجل بتقرير قبل نهاية الجلسة","لا يُنقل رجل قانون من الوينق إلا بموافقة المسؤول"],
-      join:["رتبة جندي فما فوق","30 يوماً بلا مخالفة فوق الدرجة 2","مقابلة قصيرة مع المسؤول"] },
-    { id:"detect", ar:"وينق التحري", en:"Detective Wing", head:"Rowan Pike", minRank:4, members:4, open:true,
-      desc:"متابعة السرقات الكبرى، تتبع الآثار وجمع الأدلة قبل القبض.",
-      rules:["لا قبض بدون دليل موثق","التقارير سرية ولا تُشارك خارج الوينق","التواصل مع المخبرين يُسجل عند المسؤول"],
-      join:["رتبة عريف أول فما فوق","ترشيح من رقيب","اختبار تحليل حالة"] },
-    { id:"border", ar:"وينق الحدود", en:"Border Wing", head:"Silas Brandt", minRank:2, members:5, open:true,
-      desc:"حماية الطرق بين New Austin وWest Elizabeth ومراقبة الدخول والخروج.",
-      rules:["التفتيش يتم فقط عند وجود سبب واضح حسب البند 4.2","الإبلاغ عن كل اشتباك للقيادة فوراً","لا مطاردة خارج حدود المنطقتين بدون إذن"],
-      join:["رتبة جندي فما فوق","خبرة 10 ساعات دوريات","موافقة المسؤول"] },
-    { id:"academy", ar:"وينق التدريب", en:"Training Wing", head:"Nathan Greer", minRank:4, members:3, open:false,
-      desc:"تدريب المتدربين وتقييمهم قبل اعتمادهم رجال قانون.",
-      rules:["كل مدرّب مسؤول عن 3 متدربين كحد أقصى","التقييم الأسبوعي إلزامي","لا ترقية لمتدرب بدون توصية المدرّب"],
-      join:["رتبة عريف أول فما فوق","سجل نظيف 45 يوماً","اعتماد النقيب"] }
+  {
+   "id": 3,
+   "name": "عريف",
+   "en": "Corporal",
+   "stars": 0,
+   "desc": "",
+   "can": [],
+   "cannot": []
+  },
+  {
+   "id": 4,
+   "name": "عريف أول",
+   "en": "Senior Corporal",
+   "stars": 0,
+   "desc": "",
+   "can": [],
+   "cannot": []
+  },
+  {
+   "id": 5,
+   "name": "رقيب",
+   "en": "Sergeant",
+   "stars": 0,
+   "desc": "",
+   "can": [],
+   "cannot": []
+  },
+  {
+   "id": 6,
+   "name": "رقيب أول",
+   "en": "Senior Sergeant",
+   "stars": 0,
+   "desc": "",
+   "can": [],
+   "cannot": []
+  },
+  {
+   "id": 7,
+   "name": "ملازم",
+   "en": "Lieutenant",
+   "stars": 0,
+   "desc": "",
+   "can": [],
+   "cannot": []
+  },
+  {
+   "id": 8,
+   "name": "مفتش",
+   "en": "Inspector",
+   "stars": 0,
+   "desc": "",
+   "can": [],
+   "cannot": []
+  },
+  {
+   "id": 9,
+   "name": "نائب الشيرف",
+   "en": "Deputy Sheriff",
+   "stars": 0,
+   "desc": "",
+   "can": [],
+   "cannot": []
+  },
+  {
+   "id": 10,
+   "name": "الشيرف",
+   "en": "Sheriff",
+   "stars": 0,
+   "desc": "",
+   "can": [],
+   "cannot": []
+  },
+  {
+   "id": 11,
+   "name": "المرشال",
+   "en": "Marshal",
+   "stars": 0,
+   "desc": "",
+   "can": [],
+   "cannot": []
+  }
+ ],
+ "statuses": {
+  "active": "في الخدمة",
+  "leave": "إجازة",
+  "suspended": "موقوف"
+ },
+ "members": [
+  {
+   "name": "Jasas Ibn Murh",
+   "rank": 11,
+   "discord": "oMuTx",
+   "points": null,
+   "gear": null,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Hetrish",
+   "rank": 10,
+   "discord": "MoShz",
+   "points": null,
+   "gear": null,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Shamekh ALashhb",
+   "rank": 9,
+   "discord": "Nxe",
+   "points": null,
+   "gear": null,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Churchill Albert",
+   "rank": 8,
+   "discord": "qyem",
+   "points": null,
+   "gear": true,
+   "post": "مكتب إدارة العاصمة",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Aoun Aljasas",
+   "rank": 8,
+   "discord": "abosaloum",
+   "points": null,
+   "gear": true,
+   "post": "مكتب إدارة العاصمة",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Rabia Alashath",
+   "rank": 7,
+   "discord": "qtrm7md",
+   "points": null,
+   "gear": true,
+   "post": "رئيس رجال القانون",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "haythem alburkan",
+   "rank": 7,
+   "discord": "TGF00",
+   "points": null,
+   "gear": true,
+   "post": "نائب رئيس رجال القانون",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Dhari Wael",
+   "rank": 7,
+   "discord": "pew1",
+   "points": null,
+   "gear": true,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Saad Alqnas",
+   "rank": 7,
+   "discord": "d7m_i",
+   "points": null,
+   "gear": true,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "abdulaziz hajar",
+   "rank": 6,
+   "discord": "abdulaziz.alshehhi",
+   "points": 305,
+   "gear": false,
+   "post": "مستشار الشيرف",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Bale Robotrs",
+   "rank": 5,
+   "discord": "shanks00551",
+   "points": 700,
+   "gear": true,
+   "post": "رئيس قسم التحقيق",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Abdallah al Battal",
+   "rank": 5,
+   "discord": "4cni",
+   "points": 500,
+   "gear": true,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Musab Alarqm",
+   "rank": 5,
+   "discord": "l7s_",
+   "points": 500,
+   "gear": true,
+   "post": "نائب رئيس قسم التحقيق",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Hasan Aban",
+   "rank": 5,
+   "discord": "imsh4",
+   "points": 985,
+   "gear": true,
+   "post": "مستشار الشيرف",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Aroua ALasha",
+   "rank": 4,
+   "discord": "inlh",
+   "points": 500,
+   "gear": true,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "ALI ALHOOT",
+   "rank": 4,
+   "discord": "noLizr",
+   "points": 500,
+   "gear": true,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Daham Kinanah",
+   "rank": 4,
+   "discord": "T4SHD",
+   "points": 500,
+   "gear": true,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Ali Alqallaf",
+   "rank": 3,
+   "discord": "alqallaf_95",
+   "points": 300,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "ALKSAR ABN",
+   "rank": 3,
+   "discord": "aizensousuke1",
+   "points": 300,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "JASSAS ALHAIB",
+   "rank": 3,
+   "discord": "khald2553",
+   "points": 300,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Hamza Qasaymeh",
+   "rank": 3,
+   "discord": "az511az",
+   "points": 300,
+   "gear": true,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "ALHARITH ALMUGHIRA",
+   "rank": 2,
+   "discord": "abo3th",
+   "points": 150,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Shbeb bn zhel",
+   "rank": 2,
+   "discord": ".12v",
+   "points": 150,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Ward Tashkandi",
+   "rank": 2,
+   "discord": "518.b",
+   "points": 150,
+   "gear": true,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Khrash AlMakhrosh",
+   "rank": 2,
+   "discord": "elbulldozer",
+   "points": 150,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Yahya Ibrahim",
+   "rank": 2,
+   "discord": "_6dw",
+   "points": 150,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Abdulmalik AlBattal",
+   "rank": 2,
+   "discord": "majorosama",
+   "points": 150,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "AlHarith Abbad",
+   "rank": 2,
+   "discord": "3e1m",
+   "points": 150,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Dirgham Alashath",
+   "rank": 2,
+   "discord": "o2zv",
+   "points": 150,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Marah Tashkandi",
+   "rank": 2,
+   "discord": "rojh",
+   "points": 150,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Gibrel Gutadh",
+   "rank": 1,
+   "discord": "xLive",
+   "points": 0,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "zaeter bn mrh",
+   "rank": 1,
+   "discord": "x7jw",
+   "points": 5,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  },
+  {
+   "name": "Sahoud AlMajed",
+   "rank": 1,
+   "discord": "5smh",
+   "points": 0,
+   "gear": false,
+   "post": "",
+   "joined": "",
+   "status": "active"
+  }
+ ],
+ "degrees": [
+  {
+   "n": 1,
+   "name": "مخالفة بسيطة",
+   "desc": "تقصير خفيف لا يؤثر على المواطنين أو سير الحالة.",
+   "ex": [
+    "التأخر عن موعد الدورية",
+    "ألفاظ غير لائقة بسيطة",
+    "إهمال في كتابة التقرير"
+   ],
+   "id": "1"
+  },
+  {
+   "n": 2,
+   "name": "إهمال",
+   "desc": "عدم أداء واجب مطلوب ضمن نطاق العمل.",
+   "ex": [
+    "عدم مباشرة بلاغ ضمن النطاق (بند 1.3)",
+    "عدم التعريف بالنفس قبل النقاش (بند 1.1)",
+    "ترك الدورية بدون إبلاغ"
+   ],
+   "id": "2"
+  },
+  {
+   "n": 3,
+   "name": "تجاوز إجرائي",
+   "desc": "مخالفة بند إجرائي في الكتيب بدون ضرر جسيم.",
+   "ex": [
+    "تفتيش بدون سبب (بند 1.9 و4.1)",
+    "استعمال الحبل لسبب تافه (بند 2.4)",
+    "إطلاق النار على الحصان بدون شرطه (بند 3.2)"
+   ],
+   "id": "3"
+  },
+  {
+   "n": 4,
+   "name": "تجاوز جسيم",
+   "desc": "تصرف يضر بمواطن أو بسمعة المكتب.",
+   "ex": [
+    "إطلاق النار على مواطن غير مسلح بدون استثناء (بند 1.8)",
+    "المضايقة أو التعالي على المواطنين (بند 1.2)",
+    "تفتيش للانتقام الشخصي (بند 4.4)"
+   ],
+   "id": "4"
+  },
+  {
+   "n": 5,
+   "name": "إساءة استعمال سلطة",
+   "desc": "استغلال الرتبة أو الصلاحيات لمصلحة شخصية.",
+   "ex": [
+    "تصفية خلافات شخصية بالصلاحيات",
+    "أخذ وعطاء مع مطلوب أو مخالف",
+    "رمي الحبل أو الربط خارج الحالات المسموحة"
+   ],
+   "id": "5"
+  },
+  {
+   "n": 6,
+   "name": "خيانة الأمانة",
+   "desc": "سلوك يهدم الثقة في رجل القانون كلياً.",
+   "ex": [
+    "تسريب خطط المداهمات",
+    "التعاون مع مطلوبين",
+    "أخذ المصادرات لنفسه"
+   ],
+   "id": "6"
+  }
+ ],
+ "ladder": [
+  "تنبيه شفهي",
+  "تنبيه كتابي",
+  "إنذار رسمي",
+  "إيقاف 24 ساعة",
+  "إيقاف 3 أيام",
+  "تنزيل رتبة",
+  "تجميد الرتبة والتحقيق",
+  "فصل"
+ ],
+ "penalties": {
+  "1": [
+   0,
+   1,
+   3,
+   4,
+   5,
+   7
   ],
-
-  /* ---------- الممنوعات ---------- */
-  types: { illegal:"غير قانوني", semi:"شبه قانوني" },
-  banned: [
-    { name:"المونشاين", type:"illegal", scope:"كل المناطق",
-      desc:"الكحول المصنّع بدون ترخيص، سواء المنتج أو أدوات الصنع.",
-      withdraw:["يُسحب فور اكتشافه بأي حالة","يُصادر مع أدوات الصنع في المداهمة"], action:"مصادرة وإتلاف + قبض على الحائز" },
-    { name:"الحشيش ومنتجاته", type:"illegal", scope:"كل المناطق",
-      desc:"النبتة ومشتقاتها المزروعة أو المصنّعة خارج الإطار المسموح.",
-      withdraw:["يُسحب عند التفتيش المبرر","يُصادر كاملاً عند مداهمة المزرعة"], action:"مصادرة وإتلاف" },
-    { name:"الديناميت", type:"illegal", scope:"داخل المدن وحولها",
-      desc:"المتفجرات بكل أنواعها خارج التراخيص الخاصة.",
-      withdraw:["يُسحب عند حمله داخل المدينة","يُسحب مع أي بلاغ تفجير"], action:"مصادرة + قبض" },
-    { name:"سلاح مسروق", type:"illegal", scope:"كل المناطق",
-      desc:"أي سلاح مثبت أنه من سرقة أو مسجل لمالك آخر.",
-      withdraw:["يُسحب عند ثبوت السرقة","يُعاد لمالكه الأصلي بعد التحقق"], action:"مصادرة وإعادة للمالك" },
-    { name:"أدوات فتح الأقفال", type:"semi", scope:"داخل المدن",
-      desc:"مسموحة لأصحاب الأعمال المرخصة، وممنوعة عند حملها بسياق مشبوه.",
-      withdraw:["تُسحب عند حملها قرب موقع سرقة","تُسحب إن لم يكن لحاملها ترخيص عمل"], action:"سحب مؤقت وإعادة بعد التحقق" },
-    { name:"البنادق في المدينة", type:"semi", scope:"المدن المأهولة",
-      desc:"مسموح حملها مغلفة على الحصان، ويُمنع إخراجها داخل حدود المدينة.",
-      withdraw:["تُسحب عند إخراجها بدون سبب","تُسحب بعد توجيهها على أي شخص"], action:"سحب مؤقت وتحذير" },
-    { name:"القنص", type:"semi", scope:"كل المناطق",
-      desc:"الأسلحة بعيدة المدى مقيدة بترخيص صيد أو اعتماد.",
-      withdraw:["تُسحب بدون ترخيص ساري","تُسحب عند استعمالها داخل المدينة"], action:"سحب وغرامة" },
-    { name:"السم والمواد الخطرة", type:"semi", scope:"داخل المدن",
-      desc:"مسموحة لتجار معتمدين وللاستعمال البيطري فقط.",
-      withdraw:["تُسحب إذا تعذر إثبات الاستعمال","تُسحب عند أي شبهة تسميم"], action:"سحب + تحقيق" }
+  "2": [
+   0,
+   1,
+   3,
+   4,
+   5,
+   7
+  ],
+  "3": [
+   0,
+   1,
+   3,
+   4,
+   5,
+   7
+  ],
+  "4": [
+   0,
+   1,
+   3,
+   4,
+   5,
+   7
+  ],
+  "5": [
+   0,
+   1,
+   3,
+   4,
+   5,
+   7
+  ],
+  "6": [
+   1,
+   2,
+   4,
+   5,
+   6,
+   7
+  ],
+  "7": [
+   1,
+   2,
+   4,
+   5,
+   6,
+   7
+  ],
+  "8": [
+   1,
+   2,
+   4,
+   5,
+   6,
+   7
+  ],
+  "9": [
+   1,
+   3,
+   5,
+   6,
+   7,
+   7
+  ],
+  "10": [
+   1,
+   3,
+   5,
+   6,
+   7,
+   7
+  ],
+  "11": [
+   1,
+   3,
+   5,
+   6,
+   7,
+   7
   ]
+ },
+ "promotions": {},
+ "wings": [],
+ "types": {
+  "illegal": "غير قانوني",
+  "semi": "شبه قانوني"
+ },
+ "banned": []
 };
-
-/* معرّفات ثابتة لكل عنصر (لا تعدّلها) */
 (function(S){
   const p=(n,i)=>n+String(i+1).padStart(2,'0');
   S.members.forEach((x,i)=>{x.id=p('m',i)});
   S.banned.forEach((x,i)=>{x.id=p('b',i);x.o=i});
   S.wings.forEach((x,i)=>{x.o=i});
   S.degrees.forEach(x=>{x.id=String(x.n)});
-  S.ranks.forEach(x=>{x.id=x.id});
 })(window.SITE);
 </script>
 <script>/* ربط الموقع بـ Supabase: حسابات، أدوار، بيانات، صور */
@@ -512,14 +973,14 @@ function listen(){
 const navItems=()=>caps.level>=3&&caps.auth?[...NAV,["accounts","الحسابات"]]:NAV;
 function authBox(){
   if(caps.auth){
-    if(!caps.profile)return `<button class="btn sm" data-act="login">دخول</button>`;
+    if(!caps.profile)return `<span class="mode"><button class="btn sm" data-act="login">دخول</button></span>`;
     const nm=e(caps.profile.name||caps.profile.email||'');
     return `<span class="mode"><span class="tag ${caps.level?'ok':'dim'}">${ROLE_AR[caps.profile.role]||''}</span> <button class="lnk" data-act="me" title="حسابي وربط الحسابات"><bdi>${nm}</bdi></button> <button class="btn ghost sm" data-act="logout">خروج</button></span>`;
   }
   return caps.write?'<span class="mode tag ok">وضع التعديل</span>':'';
 }
 function shell(inner){
-  return `<header class="top"><div class="top-in"><a class="brand" href="#home" data-go="home"><img src="${LOGO}" alt="" width="36" height="36"><span>OUTLAW</span></a><nav class="nav" aria-label="الصفحات">${navItems().map(n=>`<a href="#${n[0]}" data-go="${n[0]}"${n[0]===ui.route?' aria-current="page"':''}>${n[1]}</a>`).join('')}</nav>${authBox()}</div>${showDemo()?`<div class="demo">بيانات تجريبية: الأسماء والأرقام أمثلة وستستبدل ببيانات المكتب${canKind('site')?' <button data-act="hidedemo">إخفاء هذا الشريط</button>':''}</div>`:''}</header><main class="wrap" id="main">${inner}</main><footer>جميع الحقوق محفوظة © ${e(S.name)} · ${e(S.office)}${caps.level?'':' · عرض فقط'}</footer>`;
+  return `<header class="top"><div class="top-in"><a class="brand" href="#home" data-go="home"><img src="${LOGO}" alt="" width="36" height="36"><span>OUTLAW</span></a><nav class="nav" aria-label="الصفحات">${navItems().map(n=>`<a href="#${n[0]}" data-go="${n[0]}"${n[0]===ui.route?' aria-current="page"':''}>${n[1]}</a>`).join('')}</nav>${authBox()}</div></header><main class="wrap" id="main">${inner}</main><footer>جميع الحقوق محفوظة © ${e(S.name)} · ${e(S.office)}${caps.level?'':' · عرض فقط'}</footer>`;
 }
 const ph=(t,sub)=>`<div class="pagehead"><div class="star">★</div><div><h1>${t}</h1><p>${sub}</p></div></div>`;
 const stars=n=>`<div class="stars" aria-label="${n} نجوم">${'<i></i>'.repeat(n)}</div>`;
@@ -542,23 +1003,23 @@ home(){
 },
 roster(){
   const q=ui.rQ.trim().toLowerCase();
-  const rows=S.members.filter(x=>(!ui.rRank||x.rank===ui.rRank)&&(ui.rStatus==='all'||x.status===ui.rStatus)&&(!q||(x.name+' '+x.post+' '+rank(x.rank).name).toLowerCase().includes(q))).sort((a,b)=>b.rank-a.rank||a.name.localeCompare(b.name));
-  return ph("المنفذون","أسماء رجال القانون ورتبهم ومناصبهم.")+`<div class="sheet"><div class="bar"><input type="search" id="q" value="${e(ui.rQ)}" placeholder="ابحث بالاسم أو المنصب" aria-label="بحث"><select id="rk" aria-label="الرتبة"><option value="0">كل الرتب</option>${ranksDesc().map(r=>`<option value="${r.id}"${ui.rRank===r.id?' selected':''}>${e(r.name)}</option>`).join('')}</select>${addBtn('members','إضافة منفذ')}</div>
+  const rows=S.members.filter(x=>(!ui.rRank||x.rank===ui.rRank)&&(ui.rStatus==='all'||x.status===ui.rStatus)&&(!q||(x.name+' '+(x.discord||'')+' '+x.post+' '+rank(x.rank).name).toLowerCase().includes(q))).sort((a,b)=>b.rank-a.rank||a.name.localeCompare(b.name));
+  return ph("المنفذون","أسماء رجال القانون ورتبهم ومناصبهم.")+`<div class="sheet"><div class="bar"><input type="search" id="q" value="${e(ui.rQ)}" placeholder="ابحث بالاسم أو الديسكورد أو المنصب" aria-label="بحث"><select id="rk" aria-label="الرتبة"><option value="0">كل الرتب</option>${ranksDesc().map(r=>`<option value="${r.id}"${ui.rRank===r.id?' selected':''}>${e(r.name)}</option>`).join('')}</select>${addBtn('members','إضافة منفذ')}</div>
   <div class="chips" role="group" aria-label="الحالة">${[['all','الكل'],...Object.entries(S.statuses)].map(([k,v])=>`<button class="chip" data-rs="${k}" aria-pressed="${k===ui.rStatus}">${v}</button>`).join('')}</div>
-  <div class="count">عرض ${rows.length} من ${S.members.length}</div><div class="tw"><table><thead><tr><th>الاسم</th><th>الرتبة</th><th>المنصب</th><th>الانضمام</th><th>الحالة</th>${canKind('members')?'<th></th>':''}</tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td><bdi class="ltr">${e(x.name)}</bdi></td><td><span class="rk"><i></i>${e(rank(x.rank).name)}</span></td><td>${e(x.post)}</td><td class="num">${e(x.joined)}</td><td><span class="st ${e(x.status)}">${e(S.statuses[x.status]||x.status)}</span></td>${canKind('members')?`<td>${edBtn('members',x.id)}</td>`:''}</tr>`).join(''):`<tr><td colspan="6" class="empty">ما في نتائج مطابقة</td></tr>`}</tbody></table></div></div>`;
+  <div class="count">عرض ${rows.length} من ${S.members.length}</div><div class="tw"><table><thead><tr><th>الاسم</th><th>Discord</th><th>الرتبة</th><th>المنصب</th><th>النقاط</th><th>معدات خاصة</th><th>الحالة</th>${canKind('members')?'<th></th>':''}</tr></thead><tbody>${rows.length?rows.map(x=>`<tr><td><bdi class="ltr">${e(x.name)}</bdi></td><td class="num">${e(x.discord||'-')}</td><td><span class="rk"><i></i>${e(rank(x.rank).name)}</span></td><td>${e(x.post||'-')}</td><td class="num">${x.points!=null?e(x.points):'-'}</td><td>${x.gear===true?'نعم':x.gear===false?'لا':'-'}</td><td><span class="st ${e(x.status)}">${e(S.statuses[x.status]||x.status)}</span></td>${canKind('members')?`<td>${edBtn('members',x.id)}</td>`:''}</tr>`).join(''):`<tr><td colspan="8" class="empty">ما في نتائج مطابقة</td></tr>`}</tbody></table></div></div>`;
 },
 ranks(){
-  return ph("سلم الصلاحيات","كل رتبة وما تملكه من صلاحيات وما يُحظر عليها، من الأعلى إلى الأدنى.")+`<div class="sheet">${canKind('ranks')?`<div class="acts" style="margin:0 0 6px">${addBtn('ranks','إضافة رتبة عليا')}</div>`:''}${ranksDesc().map(r=>`<article class="rank" id="r${r.id}"><div class="star">${r.id}</div><div><div class="nm"><h3>${e(r.name)}</h3><span class="en">${e(r.en)}</span></div>${stars(r.stars||0)}</div><div class="body"><p class="lead" style="margin:6px 0 0">${e(r.desc)}</p><div class="cols"><div><h4>الصلاحيات</h4>${lines(r.can)}</div>${(r.cannot||[]).length?`<div class="no"><h4>غير مسموح</h4>${lines(r.cannot)}</div>`:''}</div><div class="acts"><button class="lnk" data-go="roster" data-rank="${r.id}">عرض منفذي هذه الرتبة</button>${edBtn('ranks',r.id)}</div></div></article>`).join('')}</div>`;
+  return ph("سلم الصلاحيات","كل رتبة وما تملكه من صلاحيات وما يُحظر عليها، من الأعلى إلى الأدنى.")+`<div class="sheet">${canKind('ranks')?`<div class="acts" style="margin:0 0 6px">${addBtn('ranks','إضافة رتبة عليا')}</div>`:''}${ranksDesc().map(r=>`<article class="rank" id="r${r.id}"><div class="star">${r.id}</div><div><div class="nm"><h3>${e(r.name)}</h3><span class="en">${e(r.en)}</span></div>${r.stars>0?stars(r.stars):''}</div><div class="body">${r.desc?`<p class="lead" style="margin:6px 0 0">${e(r.desc)}</p>`:''}${(r.can||[]).length||(r.cannot||[]).length?`<div class="cols">`:'<div>'}${(r.can||[]).length?`<div><h4>الصلاحيات</h4>${lines(r.can)}</div>`:''}${(r.cannot||[]).length?`<div class="no"><h4>غير مسموح</h4>${lines(r.cannot)}</div>`:''}</div><div class="acts"><button class="lnk" data-go="roster" data-rank="${r.id}">عرض منفذي هذه الرتبة</button>${edBtn('ranks',r.id)}</div></div></article>`).join('')}</div>`;
 },
 promo(){
   const asc=ranksAsc();
   return ph("الترقيات والمحاسبة","درجات المخالفات الست، ما يترتب على كل رتبة عند المخالفة، ومتطلبات الترقية.")+
   `<section class="sheet"><div class="sh"><h2>درجات المخالفات</h2><span>6 LEVELS</span></div><p class="lead">كل بند في الكتيب يندرج تحت درجة من ست درجات. الدرجة تحدد نوع المحاسبة بحسب رتبة رجل القانون.</p><div class="deg">${S.degrees.map(d=>`<div class="dg" data-n="${d.n}"><div class="h"><span class="tag">${d.n}</span><h3>${e(d.name)}</h3></div><p>${e(d.desc)}</p>${lines(d.ex)}<div class="acts">${edBtn('degrees',d.id)}</div></div>`).join('')}</div></section>
   <section class="sheet"><div class="sh"><h2>المحاسبة حسب الرتبة</h2><span>PENALTIES</span></div><p class="lead">اقرأ الصف برتبتك والعمود بدرجة المخالفة. الرتب الأعلى تتحمل مسؤولية أكبر فتتصاعد محاسبتها أسرع.${canKind('penalties')?' غيّر أي خانة من القائمة وتحفظ مباشرة.':''}</p><div class="tw"><table class="mx"><thead><tr><th>الرتبة</th>${S.degrees.map(d=>`<th>الدرجة ${d.n}</th>`).join('')}</tr></thead><tbody>${ranksDesc().map(r=>{const row=S.penalties[r.id]||S.penalties[Math.max(...Object.keys(S.penalties))]||[];return `<tr><td><span class="rk"><i></i>${e(r.name)}</span></td>${S.degrees.map((d,i)=>{const s=row[i]??0;return `<td style="--s:${s}">${canKind('penalties')?`<select data-pen="${r.id}:${i}" aria-label="${e(r.name)} درجة ${d.n}">${S.ladder.map((l,k)=>`<option value="${k}"${k===s?' selected':''}>${e(l)}</option>`).join('')}</select>`:`<b>${e(S.ladder[s])}</b>`}</td>`}).join('')}</tr>`}).join('')}</tbody></table></div><div class="legend"><b>الشدة:</b>${S.ladder.map((l,i)=>`<span><i style="--s:${i}"></i>${e(l)}</span>`).join('')}</div></section>
-  <section class="sheet"><div class="sh"><h2>متطلبات الترقية</h2><span>PROMOTION</span></div><p class="lead">لا تتم الترقية إلا بعد استيفاء كل المتطلبات، وأي مخالفة أعلى من الحد المسموح توقف العد من جديد.</p><div class="steps">${asc.slice(0,-1).map((r,i)=>{const n=asc[i+1],p=S.promotionsMap[r.id]||{};return `<div class="step"><div class="h"><span class="rk"><i></i>${e(r.name)}</span><span class="arrow">←</span><span class="rk"><i></i>${e(n.name)}</span></div><dl><dt>ساعات الخدمة</dt><dd>${e(p.hours??'-')} ساعة</dd><dt>سجل نظيف</dt><dd>${e(p.clean??'-')} يوماً</dd><dt>المخالفات</dt><dd>${e(p.maxDeg||'-')}</dd><dt>الاختبار</dt><dd>${e(p.exam||'-')}</dd><dt>التوصية</dt><dd>${e(p.rec||'-')}</dd><dt>شرط إضافي</dt><dd>${e(p.extra||'-')}</dd></dl><div class="acts">${edBtn('promotions',r.id)}</div></div>`}).join('')}</div></section>`;
+  <section class="sheet"><div class="sh"><h2>متطلبات الترقية</h2><span>PROMOTION</span></div><p class="lead">لا تتم الترقية إلا بعد استيفاء كل المتطلبات، وأي مخالفة أعلى من الحد المسموح توقف العد من جديد.</p><div class="steps">${asc.slice(0,-1).map((r,i)=>{const n=asc[i+1],p=S.promotionsMap[r.id]||{};return `<div class="step"><div class="h"><span class="rk"><i></i>${e(r.name)}</span><span class="arrow">←</span><span class="rk"><i></i>${e(n.name)}</span></div><dl><dt>ساعات الخدمة</dt><dd>${p.hours!=null?e(p.hours)+' ساعة':'-'}</dd><dt>سجل نظيف</dt><dd>${p.clean!=null?e(p.clean)+' يوماً':'-'}</dd><dt>المخالفات</dt><dd>${e(p.maxDeg||'-')}</dd><dt>الاختبار</dt><dd>${e(p.exam||'-')}</dd><dt>التوصية</dt><dd>${e(p.rec||'-')}</dd><dt>شرط إضافي</dt><dd>${e(p.extra||'-')}</dd></dl><div class="acts">${edBtn('promotions',r.id)}</div></div>`}).join('')}</div></section>`;
 },
 wings(){
-  return ph("Wings","الوينقات الموجودة في المكتب وقوانين كل واحد وشروط الانضمام إليه.")+(canKind('wings')?`<div class="acts" style="margin:0 0 18px">${addBtn('wings','إضافة وينق')}</div>`:'')+`<div class="wg">${S.wings.map(w=>`<article class="sheet wing"><div class="h"><h2>${e(w.ar)}</h2><span class="en">${e(w.en)}</span></div><p class="lead" style="margin:8px 0">${e(w.desc)}</p><div class="meta"><span><b>المسؤول:</b> <bdi class="ltr">${e(w.head)}</bdi></span><span><b>أقل رتبة:</b> ${e(rank(w.minRank).name)}</span><span><b>الأعضاء:</b> ${e(w.members)}</span><span class="tag ${w.open?'ok':'dim'}">${w.open?'التقديم مفتوح':'التقديم مغلق'}</span></div><h4>القوانين</h4><ol>${(w.rules||[]).map(x=>`<li>${e(x)}</li>`).join('')}</ol><h4>شروط الانضمام</h4>${lines(w.join)}<div class="acts">${edBtn('wings',w.id)}</div></article>`).join('')}</div>`;
+  return ph("Wings","الوينقات الموجودة في المكتب وقوانين كل واحد وشروط الانضمام إليه.")+(canKind('wings')?`<div class="acts" style="margin:0 0 18px">${addBtn('wings','إضافة وينق')}</div>`:'')+`${S.wings.length?'':`<div class="sheet"><div class="empty">ما تمت إضافة أي وينق بعد.${canKind('wings')?' اضغط «إضافة وينق» لإضافة الأول.':''}</div></div>`}<div class="wg">${S.wings.map(w=>`<article class="sheet wing"><div class="h"><h2>${e(w.ar)}</h2><span class="en">${e(w.en)}</span></div><p class="lead" style="margin:8px 0">${e(w.desc)}</p><div class="meta"><span><b>المسؤول:</b> <bdi class="ltr">${e(w.head)}</bdi></span><span><b>أقل رتبة:</b> ${e(rank(w.minRank).name)}</span><span><b>الأعضاء:</b> ${e(w.members)}</span><span class="tag ${w.open?'ok':'dim'}">${w.open?'التقديم مفتوح':'التقديم مغلق'}</span></div><h4>القوانين</h4><ol>${(w.rules||[]).map(x=>`<li>${e(x)}</li>`).join('')}</ol><h4>شروط الانضمام</h4>${lines(w.join)}<div class="acts">${edBtn('wings',w.id)}</div></article>`).join('')}</div>`;
 },
 banned(){
   const q=ui.bQ.trim();
@@ -582,7 +1043,7 @@ function go(r,opt={}){if(!V[r])r='home';const ch=r!==ui.route;ui.route=r;if('ran
 /* ---------- editor ---------- */
 const STATUS=()=>Object.entries(S.statuses);
 const SCH={
- members:{t:'منفذ',f:[['name','الاسم','text'],['rank','الرتبة','rank'],['post','المنصب','text'],['joined','تاريخ الانضمام','date'],['status','الحالة','sel',STATUS]]},
+ members:{t:'منفذ',f:[['name','اسم الشخصية','text'],['discord','حساب Discord','text'],['rank','الرتبة','rank'],['post','المنصب','text'],['points','النقاط','num'],['gear','معدات خاصة','sel',()=>[['1','نعم'],['0','لا']]],['status','الحالة','sel',STATUS]]},
  ranks:{t:'رتبة',f:[['name','اسم الرتبة','text'],['en','الاسم بالإنجليزي','text'],['stars','عدد النجوم','num'],['desc','الوصف','area'],['can','الصلاحيات','lines'],['cannot','غير مسموح','lines']]},
  degrees:{t:'درجة',f:[['name','اسم الدرجة','text'],['desc','الوصف','area'],['ex','أمثلة','lines']]},
  promotions:{t:'متطلبات الترقية',f:[['hours','ساعات الخدمة','num'],['clean','أيام السجل النظيف','num'],['maxDeg','حد المخالفات','text'],['exam','الاختبار','text'],['rec','التوصية','text'],['extra','شرط إضافي','text']]},
@@ -633,7 +1094,7 @@ function openEditor(kind,id){
     else if(t==='area')c=`<textarea id="${id}">${e(v??'')}</textarea>`;
     else if(t==='lines')c=`<textarea id="${id}">${e((v||[]).join('\n'))}</textarea><small>كل سطر بند مستقل</small>`;
     else if(t==='rank')c=`<select id="${id}">${ranksDesc().map(r=>`<option value="${r.id}"${+v===r.id?' selected':''}>${e(r.name)}</option>`).join('')}</select>`;
-    else if(t==='sel'){const cur=k==='open'?(v===false?'0':'1'):v;c=`<select id="${id}">${o().map(([a,b])=>`<option value="${e(a)}"${String(cur)===String(a)?' selected':''}>${e(b)}</option>`).join('')}</select>`}
+    else if(t==='sel'){const cur=k==='open'?(v===false?'0':'1'):k==='gear'?(v?'1':'0'):v;c=`<select id="${id}">${o().map(([a,b])=>`<option value="${e(a)}"${String(cur)===String(a)?' selected':''}>${e(b)}</option>`).join('')}</select>`}
     else if(t==='img')c=caps.assets?`<div id="pvbox"></div><input id="${id}" type="file" accept="image/*"><small id="imst">اختر صورة (تُصغَّر تلقائياً قبل الرفع)</small>`:`<small>رفع الصور غير متاح لحسابك</small>`;
     return `<div class="fld"><label for="${id}">${l}</label>${c}</div>`;
   };
@@ -651,13 +1112,13 @@ function openEditor(kind,id){
     const out={...item};
     for(const [k,,t] of sc.f){const el=$('#f_'+k,ov);if(t==='img'){if(img)out.img=img;else delete out.img;continue}if(!el)continue;let v=el.value;
       if(t==='num'||t==='rank')v=+v;else if(t==='lines')v=v.split('\n').map(s=>s.trim()).filter(Boolean);else if(t==='text'||t==='area')v=v.trim();
-      if(k==='open')v=v==='1';
+      if(k==='open'||k==='gear')v=v==='1';
       out[k]=v}
     const need=kind==='members'?'name':kind==='wings'?'ar':kind==='banned'?'name':kind==='ranks'||kind==='degrees'?'name':null;
     if(need&&!out[need]){er.textContent='الاسم مطلوب';er.hidden=false;return}
     if(isNew){
       if(kind==='ranks'){out.id=Math.max(0,...S.ranks.map(r=>r.id))+1}
-      else if(kind==='members')out.id='m'+Date.now().toString(36);
+      else if(kind==='members'){out.id='m'+Date.now().toString(36);out.joined=out.joined||'';}
       else if(kind==='wings'){out.id='w'+Date.now().toString(36);out.o=Date.now()}
       else if(kind==='banned'){out.id='b'+Date.now().toString(36);out.o=Date.now()}
     }

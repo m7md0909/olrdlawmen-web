@@ -228,6 +228,12 @@ footer{border-top:1px solid var(--brass-d);padding:16px var(--gx2) calc(16px + e
 .mx select{width:100%;min-width:0;padding:6px 8px;font-size:.92rem}
 
 .tw td.det{white-space:normal;text-align:start;min-width:320px;line-height:1.8}.tw td.det div+div{margin-top:2px}
+
+/* صور الممنوعات: مربع ثابت لكل البطاقات، الصورة تظهر كاملة بدون قص أو تكبير يخرّب الجودة */
+.item .phb{height:220px;display:grid;place-items:center;background:var(--navy);border-bottom:1px solid var(--line);padding:8px;overflow:hidden}
+.item .phb img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;cursor:zoom-in}
+.ov.zoom{align-items:center;cursor:zoom-out}
+.ov.zoom img{max-width:min(96vw,1400px);max-height:92vh;object-fit:contain}
 </style></head>
 <body><div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
@@ -1148,7 +1154,7 @@ banned(){
   const rows=S.banned.filter(b=>(ui.bType==='all'||b.type===ui.bType)&&(!q||(b.name+b.desc).includes(q)));
   return ph("الممنوعات","المواد والأدوات الممنوعة، نوع كل واحدة، ومتى تُسحب.")+`<div class="sheet"><div class="key"><div><span class="tag">غير قانوني</span><br>ممنوع في كل الأحوال. يُسحب فوراً ويترتب عليه إجراء قانوني.</div><div><span class="tag brass">شبه قانوني</span><br>مسموح بشروط أو ترخيص. يُسحب فقط في الحالات المذكورة.</div></div>
   <div class="bar"><input type="search" id="bq" value="${e(ui.bQ)}" placeholder="ابحث في الممنوعات" aria-label="بحث"><div class="chips" role="group" aria-label="النوع">${[['all','الكل'],...Object.entries(S.types)].map(([k,v])=>`<button class="chip" data-bt="${k}" aria-pressed="${k===ui.bType}">${v}</button>`).join('')}</div>${addBtn('banned','إضافة ممنوع')}</div><div class="count">عرض ${rows.length} من ${S.banned.length}</div>
-  <div class="bn">${rows.length?rows.map(b=>`<article class="item ${e(b.type)}">${b.img&&b.img.url?`<img class="ph" src="${e(b.img.url)}" alt="${e(b.name)}" loading="lazy">`:''}<div class="in"><div class="h"><h3>${e(b.name)}</h3><span class="tag ${b.type==='semi'?'brass':''}">${e(S.types[b.type]||b.type)}</span></div><p>${e(b.desc)}</p><p><b>النطاق:</b> ${e(b.scope)}</p><h4>حالات السحب</h4>${lines(b.withdraw)}<div class="act">${e(b.action)}</div>${canKind('banned')?`<div class="acts">${edBtn('banned',b.id)}</div>`:''}</div></article>`).join(''):`<div class="empty">ما في نتائج مطابقة</div>`}</div></div>`;
+  <div class="bn">${rows.length?rows.map(b=>`<article class="item ${e(b.type)}">${b.img&&b.img.url?`<div class="phb"><img src="${e(b.img.url)}" alt="${e(b.name)}" loading="lazy" data-zoom="${e(b.img.url)}" title="اضغط للتكبير"></div>`:''}<div class="in"><div class="h"><h3>${e(b.name)}</h3><span class="tag ${b.type==='semi'?'brass':''}">${e(S.types[b.type]||b.type)}</span></div><p>${e(b.desc)}</p><p><b>النطاق:</b> ${e(b.scope)}</p><h4>حالات السحب</h4>${lines(b.withdraw)}<div class="act">${e(b.action)}</div>${canKind('banned')?`<div class="acts">${edBtn('banned',b.id)}</div>`:''}</div></article>`).join(''):`<div class="empty">ما في نتائج مطابقة</div>`}</div></div>`;
 }};
 
 /* ---------- render ---------- */
@@ -1175,7 +1181,7 @@ const SCH={
 const listOf=k=>k==='promotions'?Object.values(S.promotionsMap):k==='members'?S.members:k==='ranks'?S.ranks:k==='degrees'?S.degrees:k==='wings'?S.wings:S.banned;
 const CANDEL={members:1,wings:1,banned:1};
 
-function resizeImg(file){return new Promise((res,rej)=>{const url=URL.createObjectURL(file),im=new Image();im.onload=()=>{const m=1000,k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(url);c.toBlob(b=>b?res(b):rej(new Error('x')),'image/webp',.85)};im.onerror=()=>rej(new Error('x'));im.src=url})}
+function resizeImg(file){return new Promise((res,rej)=>{const url=URL.createObjectURL(file),im=new Image();im.onload=()=>{const m=1400,k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(url);c.toBlob(b=>b?res(b):rej(new Error('x')),'image/webp',.95)};im.onerror=()=>rej(new Error('x'));im.src=url})}
 
 async function loadProfiles(){try{window.__profiles=await caps.auth.listProfiles()}catch(_){window.__profiles=[]}if(ui.route==='accounts')render()}
 async function meDialog(){
@@ -1261,7 +1267,8 @@ function openEditor(kind,id){
 
 /* ---------- events ---------- */
 document.addEventListener('click',async ev=>{
-  const t=ev.target.closest('[data-go],[data-mv],[data-ed],[data-rs],[data-bt],[data-act]');if(!t)return;
+  const t=ev.target.closest('[data-zoom],[data-go],[data-mv],[data-ed],[data-rs],[data-bt],[data-act]');if(!t)return;
+  if(t.dataset.zoom){const ov=document.createElement('div');ov.className='ov zoom';ov.innerHTML=`<img src="${e(t.dataset.zoom)}" alt="">`;ov.onclick=()=>ov.remove();document.body.appendChild(ov);return}
   if(t.dataset.go){ev.preventDefault();go(t.dataset.go,{rank:t.dataset.rank!==undefined?+t.dataset.rank:undefined,scroll:t.dataset.scroll});return}
   if(t.dataset.mv){t.disabled=true;await moveMember(t.dataset.id,t.dataset.mv);return}
   if(t.dataset.ed!==undefined){openEditor(t.dataset.ed,t.dataset.id);return}

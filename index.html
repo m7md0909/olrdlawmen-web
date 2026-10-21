@@ -273,8 +273,10 @@ footer{border-top:1px solid var(--brass-d);padding:16px var(--gx2) calc(16px + e
 .item .cb{position:absolute;top:50%;transform:translateY(-50%);width:24px;height:40px;border:0;background:rgba(11,20,28,.65);color:var(--brass-l);cursor:pointer;opacity:0;transition:opacity .15s;font-size:.8rem}
 .item .cb.p{right:0}.item .cb.n{left:0}
 .item .phb.car:hover .cb,.item .cb:focus-visible{opacity:1}
-.item .dots{position:absolute;bottom:5px;left:0;right:0;display:flex;justify-content:center;gap:5px;pointer-events:none}
-.item .dots i{width:6px;height:6px;border-radius:50%;background:rgba(224,200,128,.3)}
+.item .dots{position:absolute;bottom:5px;left:0;right:0;display:flex;justify-content:center;align-items:center;pointer-events:none}
+.item .dots i{width:6px;height:6px;margin:0 2.5px;border-radius:50%;background:rgba(224,200,128,.3);transition:width .25s,height .25s,margin .25s,opacity .25s,background .2s}
+.item .dots i.sm{width:4px;height:4px}
+.item .dots i.out{width:0;height:0;margin:0;opacity:0}
 .item .dots i.on{background:var(--brass-l)}
 @media(hover:none){.item .cb{display:none}}
 @media(prefers-reduced-motion:reduce){.item .phb.car .track{scroll-behavior:auto}}
@@ -1121,7 +1123,10 @@ function carGo(c,n){const t=c.querySelector('.track'),max=t.children.length-1;n=
 function initCars(){
   document.querySelectorAll('[data-car]').forEach(c=>{
     const t=c.querySelector('.track');let lock=0;
-    const dots=()=>{const k=carIdx(t);c.querySelectorAll('.dots i').forEach((x,i)=>x.classList.toggle('on',i===k))};
+    const dots=()=>{const k=carIdx(t),D=c.querySelectorAll('.dots i'),n=D.length,W=5,st=Math.max(0,Math.min(n-W,k-2));
+      D.forEach((x,i)=>{const inw=i>=st&&i<st+W,sm=inw&&((i===st&&st>0)||(i===st+W-1&&st+W<n));
+        x.classList.toggle('on',i===k);x.classList.toggle('out',!inw);x.classList.toggle('sm',sm)})};
+    dots();
     t.addEventListener('scroll',dots,{passive:true});
     c.addEventListener('wheel',ev=>{
       if(Math.abs(ev.deltaX)>Math.abs(ev.deltaY))return; /* السحب الأفقي يشتغل طبيعياً */

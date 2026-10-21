@@ -234,6 +234,17 @@ footer{border-top:1px solid var(--brass-d);padding:16px var(--gx2) calc(16px + e
 .item .phb img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;cursor:zoom-in}
 .ov.zoom{align-items:center;cursor:zoom-out}
 .ov.zoom img{max-width:min(96vw,1400px);max-height:92vh;object-fit:contain}
+
+/* بطاقات ممنوعات مصغّرة: أكثر من بطاقة في الصف */
+.bn{grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:12px}
+.item .phb{height:130px;padding:6px}
+.item .in{padding:9px 11px}
+.item h3{font-size:1.05rem}
+.item p,.item li{font-size:.92rem;line-height:1.7}
+.item h4{font-size:.92rem;margin:6px 0 1px}
+.item .act{font-size:.92rem;padding-top:6px}
+.item .tag{font-size:.74rem}
+.item .acts{padding-top:6px}
 </style></head>
 <body><div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>

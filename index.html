@@ -247,6 +247,37 @@ footer{border-top:1px solid var(--brass-d);padding:16px var(--gx2) calc(16px + e
 .item .acts{padding-top:6px}
 
 .item .h{flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:4px}
+
+/* معرض صور الممنوع */
+.item .phb.multi{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:minmax(0,1fr);gap:4px;padding:4px;align-content:center}
+.item .th{position:relative;display:grid;place-items:center;aspect-ratio:1;min-width:0;padding:2px;background:rgba(255,255,255,.04);border:1px solid var(--line);cursor:zoom-in;overflow:hidden}
+.item .th:hover{border-color:var(--brass)}
+.item .th.one{width:100%;height:100%;aspect-ratio:auto;border:0;background:none}
+.item .th img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+.item .th .more{position:absolute;inset:0;display:grid;place-items:center;background:rgba(11,20,28,.72);color:var(--brass-l);font-family:var(--f-mono);font-size:1.1rem}
+.ov.zoom{position:fixed}
+.ov.zoom .gn{position:fixed;top:50%;transform:translateY(-50%);width:44px;height:64px;background:rgba(11,20,28,.8);color:var(--brass-l);border:1px solid var(--brass-d);font-size:1.3rem;cursor:pointer}
+.ov.zoom .gn.r{right:max(12px,env(safe-area-inset-right,0px))}.ov.zoom .gn.l{left:max(12px,env(safe-area-inset-left,0px))}
+.ov.zoom .gc{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);font-family:var(--f-mono);color:var(--brass-l);background:rgba(11,20,28,.8);padding:2px 12px}
+.pvs{display:flex;gap:8px;flex-wrap:wrap}
+.pvi{position:relative;width:84px;height:84px;display:grid;place-items:center;border:1px solid var(--line);background:var(--navy);padding:3px}
+.pvi img{max-width:100%;max-height:100%;object-fit:contain}
+.pvi .rm{position:absolute;top:-6px;inset-inline-start:-6px;width:22px;height:22px;border-radius:50%;border:1px solid var(--seal-l);background:var(--seal);color:#fff;cursor:pointer;line-height:1;font-size:.8rem}
+
+/* كاروسيل: صورة وحدة ظاهرة، والتبديل بالسكرول أو السحب أو الأسهم */
+.item .phb.car{position:relative;display:block;padding:0;height:140px}
+.item .phb.car .track{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.item .phb.car .track::-webkit-scrollbar{display:none}
+.item .phb.car .sl{flex:0 0 100%;height:100%;aspect-ratio:auto;border:0;background:none;scroll-snap-align:center;scroll-snap-stop:always;padding:8px 8px 18px}
+.item .phb.car .sl img{max-width:100%;max-height:100%}
+.item .cb{position:absolute;top:50%;transform:translateY(-50%);width:24px;height:40px;border:0;background:rgba(11,20,28,.65);color:var(--brass-l);cursor:pointer;opacity:0;transition:opacity .15s;font-size:.8rem}
+.item .cb.p{right:0}.item .cb.n{left:0}
+.item .phb.car:hover .cb,.item .cb:focus-visible{opacity:1}
+.item .dots{position:absolute;bottom:5px;left:0;right:0;display:flex;justify-content:center;gap:5px;pointer-events:none}
+.item .dots i{width:6px;height:6px;border-radius:50%;background:rgba(224,200,128,.3)}
+.item .dots i.on{background:var(--brass-l)}
+@media(hover:none){.item .cb{display:none}}
+@media(prefers-reduced-motion:reduce){.item .phb.car .track{scroll-behavior:auto}}
 </style></head>
 <body><div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
@@ -1081,6 +1112,35 @@ const edBtn=(kind,id,label='تعديل')=>canKind(kind)?`<button class="btn ghos
 const addBtn=(kind,label)=>canKind(kind)?`<button class="btn" data-ed="${kind}" data-id="">+ ${label}</button>`:'';
 const lines=a=>`<ul>${(a||[]).map(x=>`<li>${e(x)}</li>`).join('')}</ul>`;
 
+const pics=b=>b.imgs&&b.imgs.length?b.imgs:(b.img&&b.img.url?[b.img]:[]);
+const gallery=b=>{const P=pics(b);if(!P.length)return '';
+  if(P.length===1)return `<div class="phb"><button class="th one" data-gal="${e(b.id)}" data-i="0" title="اضغط للتكبير"><img src="${e(P[0].url)}" alt="${e(b.name)}" loading="lazy"></button></div>`;
+  return `<div class="phb car" data-car><div class="track">${P.map((p,i)=>`<button class="th sl" data-gal="${e(b.id)}" data-i="${i}" title="اضغط للتكبير"><img src="${e(p.url)}" alt="${e(b.name)} ${i+1}" loading="lazy"></button>`).join('')}</div><button class="cb p" data-cb="-1" aria-label="السابق">▶</button><button class="cb n" data-cb="1" aria-label="التالي">◀</button><span class="dots">${P.map((_,i)=>`<i${i===0?' class="on"':''}></i>`).join('')}</span></div>`};
+function carIdx(t){return Math.round(Math.abs(t.scrollLeft)/Math.max(1,t.clientWidth))}
+function carGo(c,n){const t=c.querySelector('.track'),max=t.children.length-1;n=Math.max(0,Math.min(max,n));t.scrollTo({left:-n*t.clientWidth,behavior:'smooth'})}
+function initCars(){
+  document.querySelectorAll('[data-car]').forEach(c=>{
+    const t=c.querySelector('.track');let lock=0;
+    const dots=()=>{const k=carIdx(t);c.querySelectorAll('.dots i').forEach((x,i)=>x.classList.toggle('on',i===k))};
+    t.addEventListener('scroll',dots,{passive:true});
+    c.addEventListener('wheel',ev=>{
+      if(Math.abs(ev.deltaX)>Math.abs(ev.deltaY))return; /* السحب الأفقي يشتغل طبيعياً */
+      const k=carIdx(t),n=k+(ev.deltaY>0?1:-1);
+      if(n<0||n>t.children.length-1)return; /* عند الطرف تكمل الصفحة سكرولها */
+      ev.preventDefault();const now=Date.now();if(now-lock<320)return;lock=now;carGo(c,n);
+    },{passive:false});
+  });
+}
+function openGallery(P,i){
+  const ov=document.createElement('div');ov.className='ov zoom';
+  const draw=()=>{ov.innerHTML=`<img src="${e(P[i].url)}" alt=""><button class="gn r" data-g="prev" aria-label="السابق"${P.length<2?' hidden':''}>▶</button><button class="gn l" data-g="next" aria-label="التالي"${P.length<2?' hidden':''}>◀</button><span class="gc"${P.length<2?' hidden':''}>${i+1} / ${P.length}</span>`};
+  const step=n=>{i=(i+n+P.length)%P.length;draw()};
+  ov.onclick=ev=>{const g=ev.target.closest('[data-g]');if(g){ev.stopPropagation();step(g.dataset.g==='next'?1:-1);return}ov.remove()};
+  ov._key=ev=>{if(ev.key==='Escape')ov.remove();else if(ev.key==='ArrowLeft')step(1);else if(ev.key==='ArrowRight')step(-1)};
+  document.addEventListener('keydown',ov._key);
+  new MutationObserver((m,o)=>{if(!document.body.contains(ov)){document.removeEventListener('keydown',ov._key);o.disconnect()}}).observe(document.body,{childList:true});
+  draw();document.body.appendChild(ov);
+}
 const hasPerm=r=>(r.can||[]).length||(r.cannot||[]).length||r.desc;
 const mvBtns=(x,rows)=>{
   if(ui.rQ.trim()||ui.rStatus!=='all')return '';
@@ -1098,7 +1158,7 @@ async function moveMember(id,dir){
   const r=await Promise.all(jobs);
   if(r.some(v=>!v))toast('تعذر حفظ الترتيب');else render();
 }
-const FL={name:'الاسم',discord:'Discord',rank:'الرتبة',post:'المنصب',points:'النقاط',gear:'معدات خاصة',status:'الحالة',type:'النوع',scope:'النطاق',desc:'الوصف',withdraw:'حالات السحب',action:'الإجراء',img:'الصورة',ar:'الاسم',en:'الاسم بالإنجليزي',head:'المسؤول',minRank:'أقل رتبة',members:'عدد الأعضاء',open:'التقديم',rules:'القوانين',join:'شروط الانضمام',can:'الصلاحيات',cannot:'غير مسموح',stars:'النجوم',hours:'ساعات الخدمة',clean:'أيام السجل النظيف',maxDeg:'حد المخالفات',extra:'شرط إضافي',role:'الدور',example:'شريط التجربة',joined:'الانضمام',ex:'أمثلة'};
+const FL={imgs:'الصور',name:'الاسم',discord:'Discord',rank:'الرتبة',post:'المنصب',points:'النقاط',gear:'معدات خاصة',status:'الحالة',type:'النوع',scope:'النطاق',desc:'الوصف',withdraw:'حالات السحب',action:'الإجراء',img:'الصورة',ar:'الاسم',en:'الاسم بالإنجليزي',head:'المسؤول',minRank:'أقل رتبة',members:'عدد الأعضاء',open:'التقديم',rules:'القوانين',join:'شروط الانضمام',can:'الصلاحيات',cannot:'غير مسموح',stars:'النجوم',hours:'ساعات الخدمة',clean:'أيام السجل النظيف',maxDeg:'حد المخالفات',extra:'شرط إضافي',role:'الدور',example:'شريط التجربة',joined:'الانضمام',ex:'أمثلة'};
 const COLL={members:'المنفذون',ranks:'الرتب',degrees:'درجات المخالفات',promotions:'الترقيات',wings:'Wings',banned:'الممنوعات',config:'الإعدادات',profiles:'الحسابات'};
 const lval=(k,v)=>{if(v==null||v==='')return '—';if(k==='rank'||k==='minRank')return rank(v).name;if(k==='gear')return v?'نعم':'لا';if(k==='open')return v?'مفتوح':'مغلق';if(k==='status')return S.statuses[v]||v;if(k==='type')return S.types[v]||v;if(k==='role')return ROLE_AR[v]||v;if(k==='img')return v&&v.url?'صورة':'—';return String(v).length>60?String(v).slice(0,60)+'…':String(v)};
 function logDiff(c,id,o,n){
@@ -1107,6 +1167,7 @@ function logDiff(c,id,o,n){
   const keys=[...new Set([...Object.keys(o),...Object.keys(n)])].filter(k=>!['id','o','email'].includes(k)||(k==='email'&&c==='x'));
   keys.forEach(k=>{
     const a=o[k],b=n[k];if(JSON.stringify(a)===JSON.stringify(b))return;
+    if(k==='imgs'){out.push(`الصور: ${(a||[]).length} ← ${(b||[]).length}`);return}
     if(Array.isArray(a)||Array.isArray(b)){const A=a||[],B=b||[];B.filter(x=>!A.includes(x)).forEach(x=>out.push(`${FL[k]||k}: أضيف «${String(x).slice(0,50)}»`));A.filter(x=>!B.includes(x)).forEach(x=>out.push(`${FL[k]||k}: حُذف «${String(x).slice(0,50)}»`))}
     else out.push(`${FL[k]||k}: ${lval(k,a)} ← ${lval(k,b)}`);
   });
@@ -1167,7 +1228,7 @@ banned(){
   const rows=S.banned.filter(b=>(ui.bType==='all'||b.type===ui.bType)&&(!q||(b.name+b.desc).includes(q)));
   return ph("الممنوعات","المواد والأدوات الممنوعة، نوع كل واحدة، ومتى تُسحب.")+`<div class="sheet"><div class="key"><div><span class="tag">غير قانوني</span><br>ممنوع في كل الأحوال. يُسحب فوراً ويترتب عليه إجراء قانوني.</div><div><span class="tag brass">شبه قانوني</span><br>مسموح بشروط أو ترخيص. يُسحب فقط في الحالات المذكورة.</div></div>
   <div class="bar"><input type="search" id="bq" value="${e(ui.bQ)}" placeholder="ابحث في الممنوعات" aria-label="بحث"><div class="chips" role="group" aria-label="النوع">${[['all','الكل'],...Object.entries(S.types)].map(([k,v])=>`<button class="chip" data-bt="${k}" aria-pressed="${k===ui.bType}">${v}</button>`).join('')}</div>${addBtn('banned','إضافة ممنوع')}</div><div class="count">عرض ${rows.length} من ${S.banned.length}</div>
-  <div class="bn">${rows.length?rows.map(b=>`<article class="item ${e(b.type)}">${b.img&&b.img.url?`<div class="phb"><img src="${e(b.img.url)}" alt="${e(b.name)}" loading="lazy" data-zoom="${e(b.img.url)}" title="اضغط للتكبير"></div>`:''}<div class="in"><div class="h"><h3>${e(b.name)}</h3><span class="tag ${b.type==='semi'?'brass':''}">${e(S.types[b.type]||b.type)}</span></div>${b.desc?`<p>${e(b.desc)}</p>`:''}${b.scope?`<p><b>النطاق:</b> ${e(b.scope)}</p>`:''}${(b.withdraw||[]).length?`<h4>حالات السحب</h4>${lines(b.withdraw)}`:''}${b.action?`<div class="act">${e(b.action)}</div>`:''}${canKind('banned')?`<div class="acts">${edBtn('banned',b.id)}</div>`:''}</div></article>`).join(''):`<div class="empty">ما في نتائج مطابقة</div>`}</div></div>`;
+  <div class="bn">${rows.length?rows.map(b=>`<article class="item ${e(b.type)}">${gallery(b)}<div class="in"><div class="h"><h3>${e(b.name)}</h3><span class="tag ${b.type==='semi'?'brass':''}">${e(S.types[b.type]||b.type)}</span></div>${b.desc?`<p>${e(b.desc)}</p>`:''}${b.scope?`<p><b>النطاق:</b> ${e(b.scope)}</p>`:''}${(b.withdraw||[]).length?`<h4>حالات السحب</h4>${lines(b.withdraw)}`:''}${b.action?`<div class="act">${e(b.action)}</div>`:''}${canKind('banned')?`<div class="acts">${edBtn('banned',b.id)}</div>`:''}</div></article>`).join(''):`<div class="empty">ما في نتائج مطابقة</div>`}</div></div>`;
 }};
 
 /* ---------- render ---------- */
@@ -1177,6 +1238,7 @@ function render(){
   $('#app').innerHTML=shell(V[ui.route]());
   if(ui.scroll){const t=document.getElementById(ui.scroll);ui.scroll=null;if(t)t.scrollIntoView();else window.scrollTo(0,0)}else window.scrollTo(0,y);
   if(keep){const n=document.getElementById(keep.id);if(n){n.focus();try{n.setSelectionRange(keep.s,keep.s)}catch(_){}}}
+  initCars();
   document.title='OUTLAW — مكتب الشيرف';
 }
 function go(r,opt={}){if(!V[r])r='home';const ch=r!==ui.route;ui.route=r;if(r==='log'&&caps.level>=3&&!window.__log)loadLog();if('rank' in opt)ui.rRank=opt.rank;ui.scroll=opt.scroll||(ch?'__top':null);try{history.replaceState(null,'','#'+r)}catch(_){try{location.hash=r}catch(__){}}render();if(ui.scroll==='__top'){window.scrollTo(0,0);ui.scroll=null}}
@@ -1189,7 +1251,7 @@ const SCH={
  degrees:{t:'درجة',f:[['name','اسم الدرجة','text'],['desc','الوصف','area'],['ex','أمثلة','lines']]},
  promotions:{t:'متطلبات الترقية',f:[['hours','ساعات الخدمة','num'],['clean','أيام السجل النظيف','num'],['maxDeg','حد المخالفات','text'],['extra','شرط إضافي','text']]},
  wings:{t:'وينق',f:[['ar','الاسم','text'],['en','الاسم بالإنجليزي','text'],['head','المسؤول','text'],['minRank','أقل رتبة','rank'],['members','عدد الأعضاء','num'],['open','التقديم','sel',()=>[['1','مفتوح'],['0','مغلق']]],['desc','الوصف','area'],['rules','القوانين','lines'],['join','شروط الانضمام','lines']]},
- banned:{t:'ممنوع',f:[['name','الاسم','text'],['type','النوع','sel',()=>Object.entries(S.types)],['scope','النطاق','text'],['desc','الوصف','area'],['withdraw','حالات السحب','lines'],['action','الإجراء','text'],['img','صورة','img']]}
+ banned:{t:'ممنوع',f:[['name','الاسم','text'],['type','النوع','sel',()=>Object.entries(S.types)],['scope','النطاق','text'],['desc','الوصف','area'],['withdraw','حالات السحب','lines'],['action','الإجراء','text'],['imgs','الصور','imgs']]}
 };
 const listOf=k=>k==='promotions'?Object.values(S.promotionsMap):k==='members'?S.members:k==='ranks'?S.ranks:k==='degrees'?S.degrees:k==='wings'?S.wings:S.banned;
 const CANDEL={members:1,wings:1,banned:1};
@@ -1225,7 +1287,7 @@ function openEditor(kind,id){
   let item=isNew?{}:clone(listOf(kind).find(x=>String(x.id)===String(id))||{});
   if(kind==='promotions'&&!item.id)item={id:String(id)};
   if(!isNew&&!item.id)return;
-  let img=item.img||null;
+  let imgs=[...pics(item)];
   const ov=document.createElement('div');ov.className='ov';
   const fld=([k,l,t,o])=>{
     const v=item[k];const id='f_'+k;let c='';
@@ -1236,22 +1298,22 @@ function openEditor(kind,id){
     else if(t==='lines')c=`<textarea id="${id}">${e((v||[]).join('\n'))}</textarea><small>كل سطر بند مستقل</small>`;
     else if(t==='rank')c=`<select id="${id}">${ranksDesc().map(r=>`<option value="${r.id}"${+v===r.id?' selected':''}>${e(r.name)}</option>`).join('')}</select>`;
     else if(t==='sel'){const cur=k==='open'?(v===false?'0':'1'):k==='gear'?(v===true?'1':v===false?'0':''):v;c=`<select id="${id}">${o().map(([a,b])=>`<option value="${e(a)}"${String(cur)===String(a)?' selected':''}>${e(b)}</option>`).join('')}</select>`}
-    else if(t==='img')c=caps.assets?`<div id="pvbox"></div><input id="${id}" type="file" accept="image/*"><small id="imst">اختر صورة (تُصغَّر تلقائياً قبل الرفع)</small>`:`<small>رفع الصور غير متاح لحسابك</small>`;
+    else if(t==='imgs')c=caps.assets?`<div id="pvbox" class="pvs"></div><input id="${id}" type="file" accept="image/*" multiple><small id="imst">تقدر تختار أكثر من صورة. تُصغَّر تلقائياً قبل الرفع.</small>`:`<small>رفع الصور غير متاح لحسابك</small>`;
     return `<div class="fld"><label for="${id}">${l}</label>${c}</div>`;
   };
   ov.innerHTML=`<form class="sheet dlg" novalidate><h2>${isNew?'إضافة':'تعديل'} ${sc.t}${kind==='promotions'?' · '+e(rank(item.id).name):''}</h2>${sc.f.map(fld).join('')}<div class="err" id="er" hidden></div><div class="foot"><button class="btn" type="submit" id="sv">حفظ</button><button class="btn ghost" type="button" id="cn">إلغاء</button><span class="sp"></span>${!isNew&&CANDEL[kind]?'<button class="btn danger" type="button" id="dl">حذف</button>':''}</div></form>`;
   document.body.appendChild(ov);
   const close=()=>ov.remove();
-  const pv=()=>{const b=$('#pvbox',ov);if(b)b.innerHTML=img&&img.url?`<img class="pv" src="${e(img.url)}" alt=""> <button type="button" class="btn danger sm" id="rmi">إزالة الصورة</button>`:''; const r=$('#rmi',ov);if(r)r.onclick=()=>{img=null;pv()}};pv();
-  const fi=$('#f_img',ov);
-  if(fi)fi.onchange=async()=>{const f=fi.files[0];if(!f)return;const st=$('#imst',ov);st.textContent='جاري الرفع...';try{const b=await resizeImg(f);const r=await caps.assets.upload(b);img={id:r.id,url:r.url};st.textContent='تم الرفع';pv()}catch(err){st.textContent='تعذر رفع الصورة'}};
+  const pv=()=>{const b=$('#pvbox',ov);if(!b)return;b.innerHTML=imgs.map((m,k)=>`<span class="pvi"><img src="${e(m.url)}" alt=""><button type="button" class="rm" data-rm="${k}" aria-label="إزالة الصورة">✕</button></span>`).join('');b.querySelectorAll('[data-rm]').forEach(x=>x.onclick=()=>{imgs.splice(+x.dataset.rm,1);pv()})};pv();
+  const fi=$('#f_imgs',ov);
+  if(fi)fi.onchange=async()=>{const fs=[...fi.files];if(!fs.length)return;const st=$('#imst',ov);let ok=0;for(let n=0;n<fs.length;n++){st.textContent=`جاري الرفع ${n+1} من ${fs.length}...`;try{const b=await resizeImg(fs[n]);const r=await caps.assets.upload(b);imgs.push({id:r.id,url:r.url});ok++;pv()}catch(_){}}st.textContent=ok===fs.length?'تم الرفع':`تم رفع ${ok} من ${fs.length}`;fi.value=''};
   ov.addEventListener('mousedown',ev=>{if(ev.target===ov)close()});
   $('#cn',ov).onclick=close;
   const dl=$('#dl',ov);if(dl)dl.onclick=async()=>{if(!dl.classList.contains('sure')){dl.classList.add('sure');dl.textContent='تأكيد الحذف';return}await ensureSeeded();if(await remove(kind,item.id)){close();toast('تم الحذف')}};
   $('form',ov).onsubmit=async ev=>{
     ev.preventDefault();const er=$('#er',ov);er.hidden=true;
     const out={...item};
-    for(const [k,,t] of sc.f){const el=$('#f_'+k,ov);if(t==='img'){if(img)out.img=img;else delete out.img;continue}if(!el)continue;let v=el.value;
+    for(const [k,,t] of sc.f){const el=$('#f_'+k,ov);if(t==='imgs'){if(imgs.length)out.imgs=imgs;else delete out.imgs;delete out.img;continue}if(!el)continue;let v=el.value;
       if(t==='rank')v=+v;else if(t==='num')v=v.trim()===''?null:+v;else if(t==='lines')v=v.split('\n').map(s=>s.trim()).filter(Boolean);else if(t==='text'||t==='area')v=v.trim();
       if(k==='open')v=v==='1';else if(k==='gear')v=v===''?null:v==='1';
       out[k]=v}
@@ -1280,8 +1342,9 @@ function openEditor(kind,id){
 
 /* ---------- events ---------- */
 document.addEventListener('click',async ev=>{
-  const t=ev.target.closest('[data-zoom],[data-go],[data-mv],[data-ed],[data-rs],[data-bt],[data-act]');if(!t)return;
-  if(t.dataset.zoom){const ov=document.createElement('div');ov.className='ov zoom';ov.innerHTML=`<img src="${e(t.dataset.zoom)}" alt="">`;ov.onclick=()=>ov.remove();document.body.appendChild(ov);return}
+  const t=ev.target.closest('[data-cb],[data-gal],[data-go],[data-mv],[data-ed],[data-rs],[data-bt],[data-act]');if(!t)return;
+  if(t.dataset.cb){const c=t.closest('[data-car]');carGo(c,carIdx(c.querySelector('.track'))+ +t.dataset.cb);return}
+  if(t.dataset.gal){const b=S.banned.find(x=>x.id===t.dataset.gal);if(b)openGallery(pics(b),+t.dataset.i||0);return}
   if(t.dataset.go){ev.preventDefault();go(t.dataset.go,{rank:t.dataset.rank!==undefined?+t.dataset.rank:undefined,scroll:t.dataset.scroll});return}
   if(t.dataset.mv){t.disabled=true;await moveMember(t.dataset.id,t.dataset.mv);return}
   if(t.dataset.ed!==undefined){openEditor(t.dataset.ed,t.dataset.id);return}
